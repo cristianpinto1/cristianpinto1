@@ -1,4 +1,4 @@
-# ClasesSinBarreras - Fase 2
+# ClasesSinBarreras
 
 ClasesSinBarreras es un sitio web diseñado para ayudar a estudiantes universitarios con discapacidad auditiva, proporcionando transcripción de audio a texto en tiempo real. Esta Fase 2 introduce la gestión de usuarios, almacenamiento persistente de transcripciones y un historial consultable.
 
