@@ -6,13 +6,13 @@
     <title>Registro - ClasesSinBarreras</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth_style.css">
+    <link rel="stylesheet" href="nav_style.css"> <!-- Añadido nav_style.css -->
 </head>
 <body>
     <header>
         <h1><a href="index.html" class="header-link">ClasesSinBarreras</a></h1>
-        <nav>
-            <a href="index.html">Inicio</a>
-            <a href="login.html">Iniciar Sesión</a>
+        <nav id="mainNav">
+            <!-- La navegación se poblará con JS desde auth_utils.js -->
         </nav>
     </header>
     <main class="auth-page">
@@ -40,6 +40,7 @@
     <footer>
         <p>&copy; 2023 ClasesSinBarreras</p>
     </footer>
+    <script src="auth_utils.js"></script> <!-- auth_utils.js primero -->
     <script src="auth.js"></script>
 </body>
 </html>

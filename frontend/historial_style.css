@@ -1,0 +1,156 @@
+/* Estilos para la página de historial de transcripciones */
+.history-page {
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.history-page h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap; /* Para que se ajusten en pantallas pequeñas */
+    gap: 15px; /* Espacio entre controles */
+    align-items: flex-end; /* Alinear items al final para que botones y labels se vean bien */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #eee;
+}
+
+.filter-controls .form-group {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Para que ocupen espacio disponible */
+    min-width: 200px; /* Ancho mínimo antes de envolver */
+}
+
+.filter-controls label {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.filter-controls input[type="date"],
+.filter-controls input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.filter-controls .button-primary,
+.filter-controls .button-secondary {
+    padding: 10px 15px;
+    font-size: 1em;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    height: fit-content; /* Ajustar altura al contenido */
+}
+
+.button-primary {
+    background-color: #007bff;
+    color: white;
+}
+.button-primary:hover {
+    background-color: #0056b3;
+}
+
+.button-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+.button-secondary:hover {
+    background-color: #545b62;
+}
+
+
+#transcriptionListContainer {
+    margin-top: 20px;
+}
+
+.transcription-item {
+    background-color: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    position: relative; /* Para el botón de eliminar */
+}
+
+.transcription-item .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #eee;
+}
+
+.item-header .item-date {
+    font-size: 0.9em;
+    color: #555;
+    font-weight: bold;
+}
+
+.item-header .item-course {
+    font-size: 0.9em;
+    color: #007bff;
+    background-color: #e7f3ff;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+.item-header .item-course:empty {
+    display: none; /* Ocultar si no hay etiqueta de curso */
+}
+
+
+.transcription-item .item-content p {
+    font-size: 1em;
+    line-height: 1.6;
+    color: #333;
+    white-space: pre-wrap; /* Conservar saltos de línea y espacios */
+    margin-bottom: 0; /* Quitar margen si es el único párrafo */
+}
+
+.delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff4d4d; /* Rojo para eliminar */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Circular */
+    width: 30px;
+    height: 30px;
+    font-size: 16px; /* Tamaño de la 'X' o icono */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1; /* Para centrar el texto (ej. 'X') */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.delete-button:hover {
+    background-color: #cc0000; /* Rojo más oscuro */
+}
+
+
+#loadingMessage,
+.empty-state-message {
+    text-align: center;
+    color: #777;
+    font-size: 1.1em;
+    padding: 30px 0;
+}

@@ -1,75 +1,156 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const micButton = document.getElementById('micButton'); // Cambiado de startButton a micButton
+    const micButton = document.getElementById('micButton');
     const transcriptionOutput = document.getElementById('transcriptionOutput');
     const initialPlaceholder = '<p><em>Haz clic en el micrófono para comenzar la transcripción...</em></p>';
+    const saveStatusElement = document.getElementById('saveStatus');
+    const courseLabelInput = document.getElementById('courseLabelInput'); // Obtener el input
 
     let recognition;
     let recognizing = false;
 
-    // Verificar si el navegador soporta Web Speech API
+    function showSaveStatus(message, isError = false) {
+        if (saveStatusElement) {
+            saveStatusElement.textContent = message;
+            saveStatusElement.className = 'save-status'; // Reset
+            if (isError) {
+                saveStatusElement.classList.add('error');
+            } else {
+                saveStatusElement.classList.add('success');
+            }
+            setTimeout(() => {
+                if (saveStatusElement) saveStatusElement.textContent = '';
+            }, 3000);
+        }
+    }
+
+    async function saveTranscription(text_content) {
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            // showSaveStatus("Inicia sesión para guardar tus transcripciones."); // Opcional: mensaje si no logueado
+            return;
+        }
+
+        const course_label_value = courseLabelInput ? courseLabelInput.value.trim() : null;
+        // Enviar null si la etiqueta está vacía, de lo contrario enviar el valor.
+        const course_label_to_send = course_label_value === "" ? null : course_label_value;
+
+        try {
+            const response = await fetch('/api/transcriptions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text_content: text_content,
+                    course_label: course_label_to_send // Usar el valor procesado
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('Transcripción guardada:', data);
+                showSaveStatus('Transcripción guardada.');
+            } else {
+                console.error('Error al guardar transcripción:', data.message);
+                showSaveStatus(data.message || 'Error al guardar.', true);
+            }
+        } catch (error) {
+            console.error('Error de red al guardar transcripción:', error);
+            showSaveStatus('Error de red al guardar.', true);
+        }
+    }
+
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
 
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = 'es-ES';
+        recognition.continuous = true; // Sigue escuchando
+        recognition.interimResults = true; // Muestra resultados parciales
+        recognition.lang = 'es-ES'; // Idioma español
 
         recognition.onstart = () => {
             recognizing = true;
-            document.body.classList.add('recording'); // Añade clase para cambiar estilos (ej. color del botón/animación)
+            document.body.classList.add('recording');
             micButton.setAttribute('aria-label', 'Detener Transcripción');
-            transcriptionOutput.innerHTML = '<p><em>Escuchando...</em></p>';
+
+            const listeningIndicatorExists = transcriptionOutput.querySelector('p.listening-indicator');
+            if(!listeningIndicatorExists) {
+                const listeningP = document.createElement('p');
+                listeningP.innerHTML = '<em>Escuchando...</em>';
+                listeningP.classList.add('listening-indicator');
+                // Si el contenido actual es el placeholder, reemplazarlo.
+                if (transcriptionOutput.innerHTML.trim() === initialPlaceholder.trim()) {
+                    transcriptionOutput.innerHTML = '';
+                    transcriptionOutput.appendChild(listeningP);
+                } else {
+                    // Si ya hay contenido, añadir "Escuchando..." al final.
+                    transcriptionOutput.appendChild(listeningP);
+                }
+            }
+            transcriptionOutput.scrollTop = transcriptionOutput.scrollHeight;
         };
 
         recognition.onresult = (event) => {
             let interimTranscript = '';
-            let finalTranscript = '';
+            let finalTranscriptSegment = '';
+
+            const listeningIndicator = transcriptionOutput.querySelector('p.listening-indicator');
+            if (listeningIndicator) listeningIndicator.remove();
+
+            if (transcriptionOutput.innerHTML.trim() === initialPlaceholder.trim() && event.results.length > 0) {
+                 if (event.results[0][0].transcript.length > 0) { // Solo limpiar si hay algo que mostrar
+                    transcriptionOutput.innerHTML = '';
+                 }
+            }
 
             for (let i = event.resultIndex; i < event.results.length; ++i) {
+                const transcriptPart = event.results[i][0].transcript;
                 if (event.results[i].isFinal) {
-                    finalTranscript += event.results[i][0].transcript;
+                    finalTranscriptSegment += transcriptPart + ' ';
                 } else {
-                    interimTranscript += event.results[i][0].transcript;
+                    interimTranscript += transcriptPart;
                 }
             }
 
-            if (finalTranscript) {
-                let baseHTML = transcriptionOutput.innerHTML;
-                if (baseHTML === initialPlaceholder || baseHTML === '<p><em>Escuchando...</em></p>') {
-                    baseHTML = ''; // Limpiar si solo está el placeholder o "Escuchando..."
+            if (finalTranscriptSegment) {
+                const trimmedFinalSegment = finalTranscriptSegment.trim();
+                if (trimmedFinalSegment) {
+                    const interimP = transcriptionOutput.querySelector('p.interim');
+                    if (interimP) interimP.remove();
+
+                    const newFinalP = document.createElement('p');
+                    newFinalP.textContent = trimmedFinalSegment;
+                    transcriptionOutput.appendChild(newFinalP);
+
+                    saveTranscription(trimmedFinalSegment);
                 }
-                // Evitar múltiples párrafos vacíos si la transcripción final es rápida
-                const lastP = transcriptionOutput.querySelector('p:last-child');
-                if (lastP && lastP.innerHTML.trim() === '' && !lastP.classList.contains('interim')) {
-                    lastP.remove();
-                }
+            }
 
-                transcriptionOutput.innerHTML = baseHTML + `<p>${finalTranscript.trim()}</p>`;
-                // Scroll al final
-                transcriptionOutput.scrollTop = transcriptionOutput.scrollHeight;
-
-
-            } else if (interimTranscript) {
+            if (interimTranscript) { // Mostrar siempre el intermedio si existe
                 let currentParagraph = transcriptionOutput.querySelector('p.interim');
                 if (!currentParagraph) {
-                    // Si no hay párrafo intermedio, y el contenido no es el placeholder o "Escuchando..."
-                    // lo añadimos. Si es placeholder o "Escuchando...", lo reemplazamos.
-                    if (transcriptionOutput.innerHTML === initialPlaceholder || transcriptionOutput.innerHTML === '<p><em>Escuchando...</em></p>') {
-                        transcriptionOutput.innerHTML = '';
-                    }
                     currentParagraph = document.createElement('p');
                     currentParagraph.classList.add('interim');
                     transcriptionOutput.appendChild(currentParagraph);
                 }
                 currentParagraph.innerHTML = `<em>${interimTranscript}</em>`;
-                transcriptionOutput.scrollTop = transcriptionOutput.scrollHeight;
             }
+            transcriptionOutput.scrollTop = transcriptionOutput.scrollHeight;
         };
 
         recognition.onerror = (event) => {
             console.error('Error en el reconocimiento de voz:', event.error);
+            recognizing = false;
+            document.body.classList.remove('recording');
+            micButton.setAttribute('aria-label', 'Iniciar Transcripción');
+
+            const listeningIndicator = transcriptionOutput.querySelector('p.listening-indicator');
+            if (listeningIndicator) listeningIndicator.remove();
+            const interimP = transcriptionOutput.querySelector('p.interim');
+            if (interimP) interimP.remove();
+
             let errorMessage = 'Ocurrió un error con la transcripción.';
+            // ... (mensajes de error como antes) ...
             if (event.error === 'no-speech') {
                 errorMessage = 'No se detectó voz. Inténtalo de nuevo.';
             } else if (event.error === 'audio-capture') {
@@ -77,54 +158,74 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (event.error === 'not-allowed') {
                 errorMessage = 'Permiso para el micrófono denegado. Habilítalo en la configuración de tu navegador.';
             }
-            transcriptionOutput.innerHTML = `<p><em>${errorMessage}</em></p>`;
-            if (recognizing) {
-                recognition.stop(); // Asegurarse de detener si hay error y estaba reconociendo
-            }
+
+            const errorP = document.createElement('p');
+            errorP.innerHTML = `<em>${errorMessage}</em>`;
+            errorP.classList.add('error-message'); // Para posible estilo
+            transcriptionOutput.appendChild(errorP);
+            transcriptionOutput.scrollTop = transcriptionOutput.scrollHeight;
+
+            // No detener explícitamente recognition.stop() aquí, onend se encargará si es necesario.
         };
 
         recognition.onend = () => {
             recognizing = false;
-            document.body.classList.remove('recording'); // Quita clase de grabación
+            document.body.classList.remove('recording');
             micButton.setAttribute('aria-label', 'Iniciar Transcripción');
+
+            const listeningIndicator = transcriptionOutput.querySelector('p.listening-indicator');
+            if (listeningIndicator) listeningIndicator.remove();
 
             const interimP = transcriptionOutput.querySelector('p.interim');
             if (interimP) {
-                interimP.remove(); // Limpiar el párrafo intermedio
+                const finalText = interimP.textContent.trim();
+                if (finalText && finalText !== "Escuchando...") { // Evitar guardar "Escuchando..."
+                    interimP.classList.remove('interim');
+                    interimP.innerHTML = finalText;
+                    // No guardamos aquí, ya que se guarda en isFinal. Esto podría ser un fragmento.
+                } else {
+                    interimP.remove();
+                }
             }
 
-            // Si solo quedó "Escuchando..." o está vacío (y no fue por un error que ya mostró mensaje)
-            // o si el último mensaje es el de "Escuchando...", volver al placeholder.
-            const hasErrorMessages = transcriptionOutput.innerHTML.includes('Ocurrió un error') || transcriptionOutput.innerHTML.includes('No se detectó voz') || transcriptionOutput.innerHTML.includes('No se pudo acceder al micrófono') || transcriptionOutput.innerHTML.includes('Permiso para el micrófono denegado');
-
-            if (!hasErrorMessages && (transcriptionOutput.innerHTML.trim() === '' || transcriptionOutput.innerHTML === '<p><em>Escuchando...</em></p>')) {
-                transcriptionOutput.innerHTML = initialPlaceholder;
+            // Si no hay párrafos reales (no intermedios, no errores, no escuchando) y el contenido es vacío o placeholder, restaurar placeholder.
+            const meaningfulParagraphs = transcriptionOutput.querySelectorAll('p:not(.interim):not(.listening-indicator):not(.error-message)');
+            if (meaningfulParagraphs.length === 0 && transcriptionOutput.textContent.trim() === '') {
+                 if (transcriptionOutput.innerHTML.includes('initialPlaceholder')) { // Si el placeholder se renderizó como texto
+                    // no hacer nada, ya está el placeholder
+                 } else if (!transcriptionOutput.querySelector('.error-message')) { // Y no hay un mensaje de error
+                    transcriptionOutput.innerHTML = initialPlaceholder;
+                 }
             }
         };
 
-        micButton.addEventListener('click', () => { // Cambiado de startButton a micButton
+        micButton.addEventListener('click', () => {
             if (recognizing) {
                 recognition.stop();
             } else {
-                // Limpiar transcripción anterior antes de empezar una nueva, si no es un error
-                const hasErrorMessages = transcriptionOutput.innerHTML.includes('Ocurrió un error') || transcriptionOutput.innerHTML.includes('No se detectó voz') || transcriptionOutput.innerHTML.includes('No se pudo acceder al micrófono') || transcriptionOutput.innerHTML.includes('Permiso para el micrófono denegado');
-                if (!hasErrorMessages) {
-                    transcriptionOutput.innerHTML = initialPlaceholder;
+                // Limpiar mensajes de error previos al intentar de nuevo
+                const errorMessages = transcriptionOutput.querySelectorAll('p.error-message');
+                errorMessages.forEach(msg => msg.remove());
+
+                // Si el contenido es solo el placeholder, o si solo hay errores, se puede limpiar para el "Escuchando..."
+                if (transcriptionOutput.innerHTML.trim() === initialPlaceholder.trim() || errorMessages.length > 0 && transcriptionOutput.querySelectorAll('p:not(.error-message)').length === 0) {
+                    // onstart se encargará de poner "Escuchando..."
                 }
+
                 try {
                     recognition.start();
-                } catch (e) {
-                    console.error("Error al iniciar el reconocimiento:", e);
-                    transcriptionOutput.innerHTML = "<p><em>No se pudo iniciar el reconocimiento. Asegúrate de que el micrófono esté conectado y hayas dado permiso.</em></p>";
-                    document.body.classList.remove('recording'); // Asegurarse que no quede en estado 'recording'
+                } catch (e) { // Este catch es para errores síncronos al llamar a start()
+                    console.error("Error al iniciar el reconocimiento (síncrono):", e);
+                    transcriptionOutput.innerHTML = "<p><em>No se pudo iniciar el reconocimiento. Revisa la consola del navegador.</em></p>";
+                    document.body.classList.remove('recording');
                     micButton.setAttribute('aria-label', 'Iniciar Transcripción');
                 }
             }
         });
 
     } else {
-        micButton.disabled = true; // Cambiado de startButton a micButton
-        micButton.style.backgroundColor = '#ccc'; // Indicar visualmente que está deshabilitado
+        micButton.disabled = true;
+        micButton.style.backgroundColor = '#ccc';
         micButton.setAttribute('aria-label', 'Reconocimiento de voz no soportado');
         transcriptionOutput.innerHTML = "<p><em>Lo sentimos, tu navegador no soporta la API de reconocimiento de voz. Prueba con Chrome, Edge o Firefox (puede requerir configuración).</em></p>";
         console.warn("Web Speech API no soportada por este navegador.");

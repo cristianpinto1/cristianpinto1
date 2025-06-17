@@ -5,17 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClasesSinBarreras - Transcripción</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Podríamos añadir una librería de iconos si queremos un micrófono más elaborado, ej. Font Awesome -->
+    <link rel="stylesheet" href="nav_style.css"> <!-- Asumimos que crearemos este para la nav general -->
 </head>
 <body>
     <header>
-        <!-- Se podría añadir un menú de navegación aquí más adelante -->
-        <h1>ClasesSinBarreras</h1>
+        <h1><a href="index.html" class="header-link">ClasesSinBarreras</a></h1>
+        <nav id="mainNav">
+            <!-- La navegación se poblará con JS -->
+            <a href="index.html">Transcripción</a>
+            <!-- <a href="historial.html">Historial</a> -->
+            <!-- <a href="login.html">Login</a> / <a href="register.html">Registro</a> -->
+            <!-- <button id="logoutButton">Logout</button> -->
+        </nav>
     </header>
     <main class="transcription-page">
         <div class="mic-container">
             <button id="micButton" aria-label="Iniciar Transcripción">
-                <!-- Usaremos un SVG simple para el micrófono por ahora, o un carácter unicode -->
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor" width="50px" height="50px">
                     <path d="M192 0C139 0 96 43 96 96V256c0 53 43 96 96 96s96-43 96-96V96c0-53-43-96-96-96zM64 216c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c0 89.1 66.2 162.7 152 174.4V464H120c-13.3 0-24 10.7-24 24s10.7 24 24 24h144c13.3 0 24-10.7 24-24s-10.7-24-24-24H208V430.4c85.8-11.7 152-85.3 152-174.4V216c0-13.3-10.7-24-24-24s-24 10.7-24 24v40c0 70.7-57.3 128-128 128s-128-57.3-128-128V216z"/>
                 </svg>
@@ -26,14 +31,20 @@
                 <div class="circle circle-3"></div>
             </div>
         </div>
+
+        <div class="controls-container">
+            <input type="text" id="courseLabelInput" placeholder="Etiqueta de curso (opcional)">
+            <div id="saveStatus" class="save-status" aria-live="polite"></div>
+        </div>
+
         <div id="transcriptionOutput" aria-live="polite">
             <p><em>Haz clic en el micrófono para comenzar la transcripción...</em></p>
         </div>
     </main>
     <footer>
         <p>&copy; 2023 ClasesSinBarreras</p>
-        <!-- Aquí podrían ir enlaces a login, historial, etc. más adelante -->
     </footer>
+    <script src="auth_utils.js"></script> <!-- Nuevo script para funciones de auth compartidas -->
     <script src="script.js"></script>
 </body>
 </html>

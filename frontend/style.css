@@ -172,3 +172,64 @@ footer {
     font-size: 0.9em;
     margin-top: 20px; /* Espacio antes del footer */
 }
+
+/* Estilos para controles adicionales y estado de guardado */
+.controls-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* O el ancho del transcriptionOutput */
+    margin-bottom: 15px;
+}
+
+#courseLabelInput {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.save-status {
+    font-size: 0.9em;
+    padding: 5px 10px;
+    border-radius: 4px;
+    min-height: 1.5em; /* Para evitar saltos de layout */
+}
+
+.save-status.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.save-status.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+/* Estilos para la navegación (a ser creado en nav_style.css o aquí) */
+header nav {
+    float: right;
+    margin-top: -30px; /* Ajustar según altura del h1 */
+    margin-right: 20px;
+}
+header nav a, header nav button {
+    color: white;
+    text-decoration: none;
+    margin-left: 15px;
+    font-size: 0.9em;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+header nav a:hover, header nav button:hover {
+    text-decoration: underline;
+}
+.header-link { /* Para el H1 */
+    color: inherit;
+    text-decoration: none;
+}
