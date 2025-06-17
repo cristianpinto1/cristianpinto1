@@ -129,10 +129,4 @@ Puedes hacerlo usando la extensión `Flask-CORS`:
     ```
     *`supports_credentials=True` es importante para que Flask-Login funcione correctamente con CORS.*
 
-## Contribuir
 
-Las contribuciones son bienvenidas. Si tienes ideas para mejorar la aplicación o encuentras algún error, por favor abre un *issue* o envía un *pull request*.
-
-## Licencia
-
-Este proyecto es de código abierto y está disponible bajo la Licencia MIT.
