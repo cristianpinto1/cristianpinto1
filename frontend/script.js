@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const startButton = document.getElementById('startButton');
+    const micButton = document.getElementById('micButton'); // Cambiado de startButton a micButton
     const transcriptionOutput = document.getElementById('transcriptionOutput');
-    const initialPlaceholder = '<p><em>Presiona el botón para comenzar la transcripción...</em></p>';
+    const initialPlaceholder = '<p><em>Haz clic en el micrófono para comenzar la transcripción...</em></p>';
 
     let recognition;
     let recognizing = false;
@@ -11,13 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
 
-        recognition.continuous = true; // El reconocimiento continúa incluso si el usuario hace una pausa
-        recognition.interimResults = true; // Muestra resultados parciales mientras el usuario habla
-        recognition.lang = 'es-ES'; // Establecer el idioma a español
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'es-ES';
 
         recognition.onstart = () => {
             recognizing = true;
-            startButton.textContent = 'Detener Transcripción';
+            document.body.classList.add('recording'); // Añade clase para cambiar estilos (ej. color del botón/animación)
+            micButton.setAttribute('aria-label', 'Detener Transcripción');
             transcriptionOutput.innerHTML = '<p><em>Escuchando...</em></p>';
         };
 
@@ -33,22 +34,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Mostrar transcripción final o provisional
             if (finalTranscript) {
-                 // Si ya hay contenido y no es el placeholder, añadir un espacio o salto.
-                if (transcriptionOutput.innerHTML !== initialPlaceholder && transcriptionOutput.innerHTML !== '<p><em>Escuchando...</em></p>') {
-                    transcriptionOutput.innerHTML += `<p>${finalTranscript}</p>`;
-                } else {
-                    transcriptionOutput.innerHTML = `<p>${finalTranscript}</p>`;
+                let baseHTML = transcriptionOutput.innerHTML;
+                if (baseHTML === initialPlaceholder || baseHTML === '<p><em>Escuchando...</em></p>') {
+                    baseHTML = ''; // Limpiar si solo está el placeholder o "Escuchando..."
                 }
+                // Evitar múltiples párrafos vacíos si la transcripción final es rápida
+                const lastP = transcriptionOutput.querySelector('p:last-child');
+                if (lastP && lastP.innerHTML.trim() === '' && !lastP.classList.contains('interim')) {
+                    lastP.remove();
+                }
+
+                transcriptionOutput.innerHTML = baseHTML + `<p>${finalTranscript.trim()}</p>`;
+                // Scroll al final
+                transcriptionOutput.scrollTop = transcriptionOutput.scrollHeight;
+
+
             } else if (interimTranscript) {
-                 // Mostrar el resultado intermedio de forma que no cree multiples parrafos para la misma frase
-                let currentContent = transcriptionOutput.querySelector('p:last-child');
-                if (currentContent && currentContent.classList.contains('interim')) {
-                    currentContent.innerHTML = `<em>${interimTranscript}</em>`;
-                } else {
-                     transcriptionOutput.innerHTML += `<p class="interim"><em>${interimTranscript}</em></p>`;
+                let currentParagraph = transcriptionOutput.querySelector('p.interim');
+                if (!currentParagraph) {
+                    // Si no hay párrafo intermedio, y el contenido no es el placeholder o "Escuchando..."
+                    // lo añadimos. Si es placeholder o "Escuchando...", lo reemplazamos.
+                    if (transcriptionOutput.innerHTML === initialPlaceholder || transcriptionOutput.innerHTML === '<p><em>Escuchando...</em></p>') {
+                        transcriptionOutput.innerHTML = '';
+                    }
+                    currentParagraph = document.createElement('p');
+                    currentParagraph.classList.add('interim');
+                    transcriptionOutput.appendChild(currentParagraph);
                 }
+                currentParagraph.innerHTML = `<em>${interimTranscript}</em>`;
+                transcriptionOutput.scrollTop = transcriptionOutput.scrollHeight;
             }
         };
 
@@ -64,39 +79,54 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             transcriptionOutput.innerHTML = `<p><em>${errorMessage}</em></p>`;
             if (recognizing) {
-                recognition.stop();
+                recognition.stop(); // Asegurarse de detener si hay error y estaba reconociendo
             }
         };
 
         recognition.onend = () => {
             recognizing = false;
-            startButton.textContent = 'Iniciar Transcripción';
-            // Si el último mensaje era "Escuchando..." y no hay transcripción, volver al placeholder
-            if (transcriptionOutput.innerHTML.includes('<em>Escuchando...</em>') && transcriptionOutput.querySelectorAll('p').length === 1) {
+            document.body.classList.remove('recording'); // Quita clase de grabación
+            micButton.setAttribute('aria-label', 'Iniciar Transcripción');
+
+            const interimP = transcriptionOutput.querySelector('p.interim');
+            if (interimP) {
+                interimP.remove(); // Limpiar el párrafo intermedio
+            }
+
+            // Si solo quedó "Escuchando..." o está vacío (y no fue por un error que ya mostró mensaje)
+            // o si el último mensaje es el de "Escuchando...", volver al placeholder.
+            const hasErrorMessages = transcriptionOutput.innerHTML.includes('Ocurrió un error') || transcriptionOutput.innerHTML.includes('No se detectó voz') || transcriptionOutput.innerHTML.includes('No se pudo acceder al micrófono') || transcriptionOutput.innerHTML.includes('Permiso para el micrófono denegado');
+
+            if (!hasErrorMessages && (transcriptionOutput.innerHTML.trim() === '' || transcriptionOutput.innerHTML === '<p><em>Escuchando...</em></p>')) {
                 transcriptionOutput.innerHTML = initialPlaceholder;
-            } else {
-                // Eliminar el último "Escuchando..." o texto provisional si existe
-                const interimPs = transcriptionOutput.querySelectorAll('p.interim');
-                interimPs.forEach(p => p.remove());
             }
         };
 
-        startButton.addEventListener('click', () => {
+        micButton.addEventListener('click', () => { // Cambiado de startButton a micButton
             if (recognizing) {
                 recognition.stop();
             } else {
+                // Limpiar transcripción anterior antes de empezar una nueva, si no es un error
+                const hasErrorMessages = transcriptionOutput.innerHTML.includes('Ocurrió un error') || transcriptionOutput.innerHTML.includes('No se detectó voz') || transcriptionOutput.innerHTML.includes('No se pudo acceder al micrófono') || transcriptionOutput.innerHTML.includes('Permiso para el micrófono denegado');
+                if (!hasErrorMessages) {
+                    transcriptionOutput.innerHTML = initialPlaceholder;
+                }
                 try {
                     recognition.start();
                 } catch (e) {
                     console.error("Error al iniciar el reconocimiento:", e);
                     transcriptionOutput.innerHTML = "<p><em>No se pudo iniciar el reconocimiento. Asegúrate de que el micrófono esté conectado y hayas dado permiso.</em></p>";
+                    document.body.classList.remove('recording'); // Asegurarse que no quede en estado 'recording'
+                    micButton.setAttribute('aria-label', 'Iniciar Transcripción');
                 }
             }
         });
 
     } else {
-        startButton.disabled = true;
-        transcriptionOutput.innerHTML = "<p><em>Lo sentimos, tu navegador no soporta la API de reconocimiento de voz. Prueba con Chrome o Edge.</em></p>";
+        micButton.disabled = true; // Cambiado de startButton a micButton
+        micButton.style.backgroundColor = '#ccc'; // Indicar visualmente que está deshabilitado
+        micButton.setAttribute('aria-label', 'Reconocimiento de voz no soportado');
+        transcriptionOutput.innerHTML = "<p><em>Lo sentimos, tu navegador no soporta la API de reconocimiento de voz. Prueba con Chrome, Edge o Firefox (puede requerir configuración).</em></p>";
         console.warn("Web Speech API no soportada por este navegador.");
     }
 });

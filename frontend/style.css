@@ -1,64 +1,174 @@
 body {
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
+    padding: 0;
+    background-color: #f0f2f5; /* Un gris más claro, común en dashboards */
     color: #333;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
+    justify-content: space-between; /* Para empujar el footer hacia abajo */
 }
 
 header {
-    margin-bottom: 20px;
+    width: 100%;
+    background-color: #007bff; /* Azul primario */
+    color: white;
+    padding: 15px 0;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 header h1 {
-    color: #0056b3; /* Un azul oscuro para el título */
+    margin: 0;
+    font-size: 1.8em;
 }
 
-main {
-    background-color: #fff;
+main.transcription-page {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 800px; /* Incrementado un poco */
+    text-align: center;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 700px;
 }
 
-#startButton {
+.mic-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px; /* Más espacio antes de la transcripción */
+    width: 200px; /* Tamaño del contenedor de círculos */
+    height: 200px;
+}
+
+#micButton {
     background-color: #007bff; /* Azul primario */
     color: white;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
+    width: 100px; /* Tamaño del botón del micrófono */
+    height: 100px;
+    border-radius: 50%; /* Botón circular */
     cursor: pointer;
-    display: block;
-    margin: 0 auto 20px auto; /* Centrado y con margen inferior */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 10; /* Asegurar que esté sobre los círculos */
 }
 
-#startButton:hover {
-    background-color: #0056b3; /* Un tono más oscuro al pasar el mouse */
+#micButton:hover {
+    background-color: #0056b3; /* Azul más oscuro */
+    transform: scale(1.1);
 }
+
+#micButton:active {
+    transform: scale(1.05);
+}
+
+#micButton svg {
+    width: 40px; /* Ajustar tamaño del SVG dentro del botón */
+    height: 40px;
+}
+
+.mic-circles .circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 2px solid #007bff;
+    opacity: 0.7;
+}
+
+/* Animación de los círculos (simulando ondas) */
+.mic-circles .circle-1 {
+    width: 150px;
+    height: 150px;
+    animation: pulse 2s infinite ease-out;
+}
+
+.mic-circles .circle-2 {
+    width: 200px; /* Ligeramente más grande */
+    height: 200px;
+    animation: pulse 2s infinite ease-out 0.5s; /* Retraso para desfasar */
+}
+
+.mic-circles .circle-3 {
+    width: 250px; /* Aún más grande */
+    height: 250px;
+    animation: pulse 2s infinite ease-out 1s; /* Mayor Retraso */
+    opacity: 0.4;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.7);
+        opacity: 0.7;
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.7);
+        opacity: 0;
+    }
+}
+
+/* Estilo para cuando la grabación está activa */
+body.recording .mic-circles .circle {
+    border-color: #28a745; /* Verde cuando graba */
+    animation-duration: 1.5s; /* Pulsos más rápidos */
+}
+
+body.recording #micButton {
+    background-color: #dc3545; /* Rojo para indicar que se puede detener */
+}
+body.recording #micButton:hover {
+    background-color: #c82333; /* Rojo más oscuro */
+}
+
 
 #transcriptionOutput {
-    border: 1px solid #ddd;
-    padding: 15px;
+    border: 1px solid #ccc;
+    padding: 20px;
     min-height: 150px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    white-space: pre-wrap; /* Para mantener los saltos de línea y espacios */
+    width: 100%; /* Ocupar el ancho del contenedor main */
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    text-align: left; /* El texto de la transcripción alineado a la izquierda */
+    overflow-y: auto; /* Scroll si el texto es muy largo */
 }
 
 #transcriptionOutput p {
     margin-top: 0;
+    margin-bottom: 10px; /* Espacio entre párrafos de transcripción */
 }
 
-/* Estilo para el texto placeholder inicial */
-#transcriptionOutput em {
-    color: #777;
+#transcriptionOutput p:last-child {
+    margin-bottom: 0;
+}
+
+#transcriptionOutput em { /* Placeholder o mensajes de estado */
+    color: #6c757d; /* Gris más sutil */
+    font-style: normal;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    background-color: #343a40; /* Gris oscuro para el footer */
+    color: #f8f9fa; /* Texto claro */
+    font-size: 0.9em;
+    margin-top: 20px; /* Espacio antes del footer */
 }

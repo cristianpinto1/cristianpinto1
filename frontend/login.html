@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - ClasesSinBarreras</title>
+    <link rel="stylesheet" href="style.css"> <!-- Reutilizamos el style.css general -->
+    <link rel="stylesheet" href="auth_style.css"> <!-- Estilos específicos para auth -->
+</head>
+<body>
+    <header>
+        <h1><a href="index.html" class="header-link">ClasesSinBarreras</a></h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="register.html">Registrarse</a>
+        </nav>
+    </header>
+    <main class="auth-page">
+        <div class="auth-container">
+            <h2>Iniciar Sesión</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="identifier">Usuario o Email:</label>
+                    <input type="text" id="identifier" name="identifier" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="auth-button">Entrar</button>
+            </form>
+            <div id="authMessage" class="auth-message" aria-live="polite"></div>
+            <p class="auth-switch">¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2023 ClasesSinBarreras</p>
+    </footer>
+    <script src="auth.js"></script>
+</body>
+</html>
