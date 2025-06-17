@@ -1,0 +1,64 @@
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+header h1 {
+    color: #0056b3; /* Un azul oscuro para el título */
+}
+
+main {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 700px;
+}
+
+#startButton {
+    background-color: #007bff; /* Azul primario */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto 20px auto; /* Centrado y con margen inferior */
+}
+
+#startButton:hover {
+    background-color: #0056b3; /* Un tono más oscuro al pasar el mouse */
+}
+
+#transcriptionOutput {
+    border: 1px solid #ddd;
+    padding: 15px;
+    min-height: 150px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    white-space: pre-wrap; /* Para mantener los saltos de línea y espacios */
+}
+
+#transcriptionOutput p {
+    margin-top: 0;
+}
+
+/* Estilo para el texto placeholder inicial */
+#transcriptionOutput em {
+    color: #777;
+}
