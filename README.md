@@ -101,11 +101,3 @@ b.  **Permite el acceso al micrófono** en `index.html`.
 ### Notas sobre CORS
 
 Si sirves el frontend y el backend en puertos diferentes, asegúrate de que CORS esté configurado en `backend/app.py` (ver sección en Fase 2 del README o el código actual).
-
-## Contribuir
-
-... (igual que antes)
-
-## Licencia
-
-... (igual que antes)
