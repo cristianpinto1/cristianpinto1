@@ -117,3 +117,43 @@ header nav a {
 header nav a:hover {
     text-decoration: underline;
 }
+
+/* === Media Queries para Páginas de Autenticación === */
+
+@media (max-width: 600px) {
+    .auth-page {
+        padding-top: 20px; /* Reducir padding superior en móviles */
+        padding-left: 10px; /* Añadir un poco de padding lateral si main no lo tiene */
+        padding-right: 10px;
+    }
+
+    .auth-container {
+        width: 90%; /* Hacer el contenedor más fluido */
+        padding: 20px; /* Reducir padding interno */
+        margin-left: auto;  /* Asegurar centrado si es width % */
+        margin-right: auto; /* Asegurar centrado si es width % */
+    }
+
+    .auth-container h2 {
+        font-size: 1.5em; /* Reducir tamaño del título */
+        margin-bottom: 20px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"] {
+        /* El width: calc(100% - 20px) debería funcionar bien,
+           asegurando que el padding interno no cause desbordamiento.
+           Podemos aumentar ligeramente el tamaño de fuente para mejor legibilidad en móviles. */
+        font-size: 1em; /* O 16px para evitar zoom en iOS */
+    }
+
+    .auth-button {
+        padding: 12px 15px; /* Mantener buen tamaño para tap */
+        font-size: 1em;
+    }
+
+    .auth-switch {
+        font-size: 0.85em; /* Ligeramente más pequeño si es necesario */
+    }
+}

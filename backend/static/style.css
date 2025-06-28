@@ -268,3 +268,118 @@ header nav a:hover, header nav button:hover {
 #micButton.is-recording:hover {
     background-color: #c82333; /* Rojo más oscuro */
 }
+
+/* === Media Queries para Responsividad Global === */
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Reducir padding general del body en móviles */
+        font-size: 15px; /* Ligeramente más pequeño el tamaño base, si es necesario */
+    }
+
+    main.transcription-page,
+    main.auth-page,
+    main.history-page { /* Aplicar a todos los 'main' de nuestras páginas */
+        width: 100%; /* Ocupar todo el ancho menos el padding del body */
+        padding: 15px; /* Reducir padding interno de los main */
+    }
+
+    footer {
+        font-size: 0.8em; /* Reducir tamaño de fuente del footer */
+    }
+}
+
+/* === Media Queries para Página de Transcripción === */
+
+@media (max-width: 600px) {
+    main.transcription-page {
+        /* 'width: 100%' y 'padding: 15px' ya están en el global para 'main' */
+        /* Podemos añadir más ajustes específicos si es necesario */
+    }
+
+    .mic-container {
+        width: 150px; /* Reducir tamaño del contenedor de círculos */
+        height: 150px;
+        margin-bottom: 25px; /* Menos espacio */
+    }
+
+    #micButton {
+        width: 80px; /* Reducir tamaño del botón del micrófono */
+        height: 80px;
+    }
+
+    #micButton svg {
+        width: 30px; /* Ajustar tamaño del SVG */
+        height: 30px;
+    }
+
+    /* Ajustar animación de círculos para móviles */
+    .mic-circles .circle-1 {
+        width: 120px; /* Más pequeños */
+        height: 120px;
+    }
+    .mic-circles .circle-2 {
+        width: 150px;
+        height: 150px;
+    }
+    .mic-circles .circle-3 {
+        width: 180px;
+        height: 180px;
+    }
+
+    .controls-container {
+        flex-direction: column; /* Apilar elementos */
+        align-items: stretch; /* Hacer que los elementos ocupen el ancho */
+        gap: 10px; /* Espacio entre elementos apilados */
+    }
+
+    #courseLabelInput {
+        margin-right: 0; /* Quitar margen derecho ya que se apila */
+        width: 100%; /* Ocupar ancho completo */
+        box-sizing: border-box; /* Incluir padding y border en el width */
+    }
+
+    .save-status {
+        text-align: center; /* Centrar texto del estado de guardado */
+        margin-top: 5px; /* Pequeño margen superior */
+    }
+
+    #transcriptionOutput {
+        min-height: 100px; /* Reducir altura mínima */
+        font-size: 0.95em; /* Ligeramente más pequeño si es necesario para más texto */
+    }
+
+    .summary-output-container {
+        margin-top: 20px; /* Ajustar margen */
+    }
+    .summary-output-container h3 {
+        font-size: 1em;
+    }
+    #currentSummaryOutput { /* Hereda de .item-summary */
+        font-size: 0.9em;
+    }
+}
+
+/* Para tablets (ej. hasta 900px), ajustes más sutiles si son necesarios */
+@media (max-width: 900px) and (min-width: 601px) {
+    .mic-container {
+        width: 180px;
+        height: 180px;
+        margin-bottom: 30px;
+    }
+    #micButton {
+        width: 90px;
+        height: 90px;
+    }
+    #micButton svg {
+        width: 35px;
+        height: 35px;
+    }
+    .mic-circles .circle-1 { width: 140px; height: 140px; }
+    .mic-circles .circle-2 { width: 180px; height: 180px; }
+    .mic-circles .circle-3 { width: 220px; height: 220px; }
+
+    #transcriptionOutput {
+        min-height: 120px;
+    }
+}

@@ -192,3 +192,99 @@
     margin-bottom: 0;
     white-space: pre-wrap; /* Para mantener saltos de línea del resumen */
 }
+
+/* === Media Queries para Página de Historial === */
+
+/* Para tablets (ej. hasta 900px) - Ajustes menores si son necesarios */
+@media (max-width: 900px) {
+    .history-page {
+        width: 95%; /* Un poco más de ancho */
+        padding: 15px;
+    }
+
+    .filter-controls {
+        /* Podrían empezar a apilarse o simplemente fluir */
+        /* Por ahora, dejaremos que flex-wrap haga su trabajo.
+           Si se quiere un control más estricto, se puede forzar flex-direction: column antes. */
+    }
+}
+
+
+/* Para móviles (ej. hasta 600px) */
+@media (max-width: 600px) {
+    .history-page {
+        /* width: 100% y padding:15px ya vienen de .main global en style.css */
+        /* No es necesario redefinir aquí a menos que se quiera algo específico */
+    }
+
+    .filter-controls {
+        flex-direction: column; /* Apilar todos los controles de filtro */
+        align-items: stretch; /* Estirar elementos para que ocupen el ancho */
+    }
+
+    .filter-controls .form-group {
+        min-width: 0; /* Resetear min-width para que no interfiera con el apilado */
+        width: 100%;   /* Ocupar todo el ancho */
+        box-sizing: border-box;
+    }
+
+    .filter-controls input[type="date"],
+    .filter-controls input[type="text"],
+    .filter-controls .button-primary,
+    .filter-controls .button-secondary {
+        width: 100%; /* Hacer que todos los inputs y botones ocupen el ancho */
+        box-sizing: border-box; /* Incluir padding/border en el width */
+        margin-bottom: 10px; /* Espacio entre elementos apilados */
+    }
+    .filter-controls .button-primary:last-child,
+    .filter-controls .button-secondary:last-child {
+        margin-bottom: 0; /* Quitar margen del último botón */
+    }
+
+
+    .transcription-item {
+        padding: 10px 15px; /* Reducir padding */
+    }
+
+    .transcription-item .item-header {
+        flex-direction: column; /* Apilar fecha y curso */
+        align-items: flex-start; /* Alinear a la izquierda */
+        gap: 5px; /* Espacio entre fecha y curso */
+    }
+
+    .item-header .item-date,
+    .item-header .item-course {
+        font-size: 0.85em; /* Un poco más pequeño */
+    }
+    .item-header .item-course {
+        padding: 2px 6px; /* Ajustar padding de la etiqueta de curso */
+    }
+
+    .transcription-item .item-content p {
+        font-size: 0.9em; /* Ligeramente más pequeño para el contenido */
+    }
+
+    .delete-button {
+        /* Podría necesitar ser un poco más grande o tener más padding para ser fácilmente presionable */
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+        /* La posición absoluta podría necesitar ajustes si el padding del item cambia mucho,
+           pero top:10px, right:10px suele ser robusto. */
+    }
+
+    .item-summary-container {
+        margin-top: 10px;
+        padding-top: 8px;
+    }
+    .toggle-summary-button {
+        padding: 6px 12px; /* Ligeramente más grande para tap */
+        font-size: 0.9em;
+    }
+    .item-summary {
+        font-size: 0.9em;
+    }
+    .item-summary h4 {
+        font-size: 0.95em;
+    }
+}

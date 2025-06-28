@@ -27,3 +27,65 @@ header nav span { /* Para el saludo "Hola, Usuario" */
     color: inherit;
     text-decoration: none;
 }
+
+/* === Media Queries para Responsividad en Navegación === */
+
+/* Para tablets y móviles más grandes (ej. hasta 900px) */
+@media (max-width: 900px) {
+    header nav {
+        /* Podríamos reducir un poco el margen si es necesario */
+        /* margin-right: 10px; */
+    }
+    header nav a, header nav button.nav-button, header nav span {
+        font-size: 0.85em; /* Ligeramente más pequeño */
+        margin-left: 10px; /* Menos espacio */
+    }
+}
+
+/* Para móviles (ej. hasta 600px) */
+@media (max-width: 600px) {
+    header {
+        display: flex;
+        flex-direction: column; /* Apilar h1 y nav */
+        align-items: center; /* Centrar h1 y nav */
+        padding-bottom: 10px; /* Añadir padding abajo si la nav se apila */
+    }
+
+    header h1 {
+        margin-bottom: 10px; /* Espacio entre el título y la nav apilada */
+        font-size: 1.6em; /* Reducir tamaño del título principal */
+    }
+
+    header nav {
+        float: none; /* Quitar float */
+        margin-top: 0; /* Resetear margen superior */
+        margin-right: 0; /* Resetear margen derecho */
+        width: 100%; /* Ocupar todo el ancho disponible */
+        flex-direction: column; /* Apilar los elementos de la nav */
+        align-items: center; /* Centrar los elementos de la nav */
+    }
+
+    header nav a, header nav button.nav-button, header nav span {
+        margin: 5px 0; /* Espacio vertical entre enlaces apilados */
+        padding: 8px 15px; /* Área táctil más grande */
+        width: 80%; /* Hacer que los botones/links ocupen más ancho */
+        text-align: center;
+        border-radius: 4px; /* Opcional: redondear un poco los "botones" */
+    }
+    header nav button.nav-button {
+         box-sizing: border-box; /* Para que el width incluya padding y border */
+    }
+
+    header nav a:hover, header nav button.nav-button:hover {
+        background-color: rgba(255,255,255,0.1); /* Un ligero hover si se apilan */
+    }
+
+    header nav span { /* Saludo "Hola Usuario" */
+        width: auto; /* No necesita ocupar todo el ancho */
+        padding: 5px 0; /* Ajustar padding si es necesario */
+        border-radius: 0;
+    }
+    header nav span:hover {
+        background-color: transparent; /* No queremos hover en el saludo */
+    }
+}
