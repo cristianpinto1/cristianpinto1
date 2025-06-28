@@ -1,15 +1,17 @@
-# ClasesSinBarreras - Servidor Unificado (Fase 3 Completa)
+# ClasesSinBarreras - Control Manual de Grabación (Fase 4 Completa)
 
-ClasesSinBarreras es un sitio web diseñado para ayudar a estudiantes universitarios con discapacidad auditiva, proporcionando transcripción de audio a texto en tiempo real, gestión de usuarios, historial de transcripciones y resúmenes automáticos. En esta versión, el frontend y el backend se sirven desde la misma aplicación Flask para simplificar la ejecución.
+ClasesSinBarreras es un sitio web diseñado para ayudar a estudiantes universitarios con discapacidad auditiva, proporcionando transcripción de audio a texto en tiempo real, gestión de usuarios, historial de transcripciones y resúmenes automáticos. En esta Fase 4, se introduce el **control manual completo sobre el inicio, la detención y el guardado de las grabaciones de transcripción.**
 
 ## Características Principales
 
 *   **Transcripción en Tiempo Real:** (español).
+    *   **Control Manual:** El usuario inicia la grabación con un clic, habla durante el tiempo que necesite (la transcripción se acumula), y finaliza la grabación con otro clic.
+    *   **Guardado al Finalizar:** La transcripción completa, junto con su resumen automático, se guarda únicamente cuando el usuario detiene la grabación manualmente.
 *   **Interfaz de Usuario Moderna.**
 *   **Registro e Inicio de Sesión de Usuarios.**
 *   **Almacenamiento de Transcripciones:** Con etiquetas de curso opcionales.
 *   **Historial de Transcripciones:** Con filtros y opción de eliminar.
-*   **Resúmenes Automáticos:** Generados con `sumy` y visibles en el historial y la página principal.
+*   **Resúmenes Automáticos:** Generados con `sumy` al finalizar y guardar una grabación. Visibles en el historial y la página principal.
 *   **Navegación Dinámica:** Adaptada al estado de autenticación.
 *   **Servidor Unificado:** Frontend y Backend servidos por Flask.
 
@@ -107,13 +109,17 @@ h.  **Inicia el servidor Flask.**
     ```
     La aplicación estará disponible en `http://127.0.0.1:5000/` (o el puerto que se muestre). Todas las páginas (inicio, login, historial) y la API se sirven desde este único servidor.
 
-i.  **Permite el acceso al micrófono** en tu navegador cuando accedas a la página de transcripción.
+i.  **Uso de la Transcripción:**
+    *   En la página principal, haz clic en el botón del micrófono para **iniciar** la grabación.
+    *   Habla durante el tiempo que necesites. La transcripción aparecerá en pantalla.
+    *   Cuando hayas terminado, haz clic nuevamente en el mismo botón para **detener y guardar** la transcripción. El resumen se generará y mostrará en este momento (si estás logueado).
+    *   Permite el acceso al micrófono en tu navegador.
 
 ### Nota sobre CORS
 La configuración de CORS ya **no es necesaria** con este enfoque de servidor unificado, ya que todos los recursos se sirven desde el mismo origen.
 
 ## Contribuir
-... (igual que antes)
+Las contribuciones son bienvenidas. Si tienes ideas para mejorar la aplicación o encuentras algún error, por favor abre un *issue* o envía un *pull request*.
 
 ## Licencia
-... (igual que antes)
+Este proyecto es de código abierto y está disponible bajo la Licencia MIT.

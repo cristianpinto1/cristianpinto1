@@ -123,18 +123,19 @@ main.transcription-page {
     }
 }
 
-/* Estilo para cuando la grabación está activa */
+/* Estilo para cuando la grabación está activa (ondas) */
 body.recording .mic-circles .circle {
     border-color: #28a745; /* Verde cuando graba */
     animation-duration: 1.5s; /* Pulsos más rápidos */
 }
 
-body.recording #micButton {
-    background-color: #dc3545; /* Rojo para indicar que se puede detener */
+/* Estilos anteriores para el botón en estado de grabación (serán eliminados/reemplazados) */
+/* body.recording #micButton {
+    background-color: #dc3545;
 }
 body.recording #micButton:hover {
-    background-color: #c82333; /* Rojo más oscuro */
-}
+    background-color: #c82333;
+} */
 
 
 #transcriptionOutput {
@@ -258,3 +259,12 @@ header nav a:hover, header nav button:hover {
    o definir estilos específicos aquí si es necesario.
    Por ahora, #currentSummaryOutput tiene la clase .item-summary que ya tiene estilos.
 */
+
+/* Estilo para el botón de micrófono cuando está grabando */
+#micButton.is-recording {
+    background-color: #dc3545; /* Rojo (como estaba en body.recording #micButton) */
+    /* Aquí podrías también cambiar el SVG si el path del ícono de stop se usa */
+}
+#micButton.is-recording:hover {
+    background-color: #c82333; /* Rojo más oscuro */
+}
