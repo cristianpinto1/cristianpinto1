@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Transcripciones - ClasesSinBarreras</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="nav_style.css">
-    <link rel="stylesheet" href="historial_style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='nav_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='historial_style.css') }}">
 </head>
 <body>
     <header>
-        <h1><a href="index.html" class="header-link">ClasesSinBarreras</a></h1>
+        <h1><a href="{{ url_for('main.index_page') }}" class="header-link">ClasesSinBarreras</a></h1>
         <nav id="mainNav"></nav>
     </header>
 
@@ -32,25 +32,6 @@
 
         <div id="transcriptionListContainer">
             <p id="loadingMessage">Cargando historial...</p>
-            <!-- Ejemplo de estructura de un item con resumen:
-            <div class="transcription-item" data-id="1">
-                <button class="delete-button" title="Eliminar transcripción" data-id="1">×</button>
-                <div class="item-header">
-                    <span class="item-date">2023-10-27 10:30</span>
-                    <span class="item-course">Cálculo I</span>
-                </div>
-                <div class="item-content">
-                    <p>Este es el contenido de la transcripción...</p>
-                </div>
-                <div class="item-summary-container">
-                    <button class="toggle-summary-button" data-summary-target="summary-1">Mostrar Resumen</button>
-                    <div class="item-summary" id="summary-1" style="display:none;">
-                        <h4>Resumen:</h4>
-                        <p>Este sería el resumen generado...</p>
-                    </div>
-                </div>
-            </div>
-            -->
         </div>
         <div id="noResultsMessage" class="empty-state-message" style="display:none;">
             <p>No se encontraron transcripciones con los filtros seleccionados, o aún no tienes transcripciones guardadas.</p>
@@ -61,7 +42,7 @@
         <p>&copy; 2023 ClasesSinBarreras</p>
     </footer>
 
-    <script src="auth_utils.js"></script>
-    <script src="historial.js"></script>
+    <script src="{{ url_for('static', filename='auth_utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='historial.js') }}"></script>
 </body>
 </html>

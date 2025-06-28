@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - ClasesSinBarreras</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="auth_style.css">
-    <link rel="stylesheet" href="nav_style.css"> <!-- Añadido nav_style.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='nav_style.css') }}">
 </head>
 <body>
     <header>
-        <h1><a href="index.html" class="header-link">ClasesSinBarreras</a></h1>
+        <h1><a href="{{ url_for('main.index_page') }}" class="header-link">ClasesSinBarreras</a></h1>
         <nav id="mainNav">
-            <!-- La navegación se poblará con JS desde auth_utils.js -->
+            <!-- La navegación se poblará con JS -->
         </nav>
     </header>
     <main class="auth-page">
@@ -30,13 +30,13 @@
                 <button type="submit" class="auth-button">Entrar</button>
             </form>
             <div id="authMessage" class="auth-message" aria-live="polite"></div>
-            <p class="auth-switch">¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+            <p class="auth-switch">¿No tienes cuenta? <a href="{{ url_for('main.register_page') }}">Regístrate aquí</a></p>
         </div>
     </main>
     <footer>
         <p>&copy; 2023 ClasesSinBarreras</p>
     </footer>
-    <script src="auth_utils.js"></script> <!-- auth_utils.js primero -->
-    <script src="auth.js"></script>
+    <script src="{{ url_for('static', filename='auth_utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='auth.js') }}"></script>
 </body>
 </html>

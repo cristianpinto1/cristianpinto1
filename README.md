@@ -1,36 +1,48 @@
-# ClasesSinBarreras - Fase 3
+# ClasesSinBarreras - Servidor Unificado (Fase 3 Completa)
 
-ClasesSinBarreras es un sitio web diseñado para ayudar a estudiantes universitarios con discapacidad auditiva, proporcionando transcripción de audio a texto en tiempo real. Esta Fase 3 introduce la **generación automática de resúmenes** para las transcripciones.
+ClasesSinBarreras es un sitio web diseñado para ayudar a estudiantes universitarios con discapacidad auditiva, proporcionando transcripción de audio a texto en tiempo real, gestión de usuarios, historial de transcripciones y resúmenes automáticos. En esta versión, el frontend y el backend se sirven desde la misma aplicación Flask para simplificar la ejecución.
 
 ## Características Principales
 
-*   **Transcripción en Tiempo Real:** Captura el audio del micrófono y lo transcribe a texto directamente en el navegador (español).
-*   **Interfaz de Usuario Moderna:** Diseño actualizado con un botón de micrófono central y animaciones.
-*   **Registro e Inicio de Sesión de Usuarios:** Permite a los usuarios crear cuentas y gestionar sus sesiones.
-*   **Almacenamiento de Transcripciones:** Las transcripciones finalizadas se guardan automáticamente en una base de datos si el usuario ha iniciado sesión.
-*   **Etiquetado de Cursos:** Opción para añadir una etiqueta de curso/materia a cada transcripción.
-*   **Historial de Transcripciones:** Página dedicada donde los usuarios pueden ver, filtrar (por fecha y etiqueta) y eliminar sus transcripciones guardadas.
-*   **Resúmenes Automáticos:**
-    *   Se genera un resumen extractivo de cada transcripción guardada utilizando la biblioteca `sumy`.
-    *   El resumen se muestra tanto en la página de historial (expandible/colapsable) como en la página principal inmediatamente después de guardar una transcripción.
-*   **Navegación Dinámica:** La interfaz se adapta mostrando opciones relevantes según el estado de autenticación del usuario.
+*   **Transcripción en Tiempo Real:** (español).
+*   **Interfaz de Usuario Moderna.**
+*   **Registro e Inicio de Sesión de Usuarios.**
+*   **Almacenamiento de Transcripciones:** Con etiquetas de curso opcionales.
+*   **Historial de Transcripciones:** Con filtros y opción de eliminar.
+*   **Resúmenes Automáticos:** Generados con `sumy` y visibles en el historial y la página principal.
+*   **Navegación Dinámica:** Adaptada al estado de autenticación.
+*   **Servidor Unificado:** Frontend y Backend servidos por Flask.
 
 ## Tecnologías Utilizadas
 
-**Frontend:**
-*   HTML5
-*   CSS3 (con archivos de estilo modulares)
+**Frontend (servido por Flask):**
+*   HTML5 (Jinja2 Templates)
+*   CSS3
 *   JavaScript (Vanilla JS)
 *   Web Speech API
 
 **Backend:**
 *   Python
-*   Flask (framework web y API RESTful)
+*   Flask (framework web, API RESTful, servidor de plantillas y archivos estáticos)
 *   SQLAlchemy (ORM)
 *   Flask-Login (gestión de sesiones)
 *   SQLite (base de datos)
-*   **Sumy** (para la generación de resúmenes extractivos)
-*   **NLTK** (utilizado por Sumy para tokenización y stopwords)
+*   Sumy (generación de resúmenes)
+*   NLTK (utilizado por Sumy)
+
+## Estructura del Proyecto (Relevante)
+
+*   `backend/`: Contiene toda la aplicación.
+    *   `app.py`: Punto de entrada principal de la aplicación Flask, configuración.
+    *   `static/`: Contiene todos los archivos CSS, JavaScript e imágenes.
+        *   `style.css`, `auth_style.css`, `historial_style.css`, `nav_style.css`
+        *   `script.js`, `auth.js`, `historial.js`, `auth_utils.js`
+    *   `templates/`: Contiene las plantillas HTML.
+        *   `index.html`, `login.html`, `register.html`, `historial.html`
+    *   `auth.py`, `transcriptions.py`, `main_routes.py`: Blueprints para las diferentes partes de la aplicación.
+    *   `models.py`: Definiciones de los modelos de base de datos.
+    *   `requirements.txt`: Dependencias de Python.
+    *   `clases_sin_barreras.db`: Archivo de la base de datos SQLite (se crea al inicializar).
 
 ## Configuración y Ejecución del Proyecto
 
@@ -40,64 +52,68 @@ ClasesSinBarreras es un sitio web diseñado para ayudar a estudiantes universita
 *   pip
 *   Navegador web moderno
 
-### 1. Configuración del Backend
+### Pasos de Configuración y Ejecución
 
-a.  **Clona/descarga el repositorio.**
-b.  **Navega a `backend/`.**
+a.  **Clona o descarga el repositorio.**
+
+b.  **Navega al directorio `backend/`.**
+    ```bash
+    cd backend
+    # Nota: Toda la operación ahora se realiza desde la carpeta 'backend'
+    ```
+
 c.  **(Recomendado) Crea y activa un entorno virtual.**
     ```bash
     python -m venv venv
     # Windows: venv\Scripts\activate
     # macOS/Linux: source venv/bin/activate
     ```
-d.  **Instala las dependencias.**
+
+d.  **Instala las dependencias de Python.**
     ```bash
     pip install -r requirements.txt
     ```
+
 e.  **Descarga recursos de NLTK (necesario para Sumy).**
-    Ejecuta una sesión de Python (dentro de tu entorno virtual si estás usando uno) y corre los siguientes comandos:
+    Ejecuta una sesión de Python (dentro de tu entorno virtual) y corre:
     ```python
     import nltk
-    nltk.download('punkt') # Para tokenización
-    nltk.download('stopwords') # Para palabras vacías (stop words)
+    nltk.download('punkt')
+    nltk.download('stopwords')
     ```
-    Esto solo necesita hacerse una vez por entorno.
+    (Solo se necesita una vez por entorno).
 
 f.  **Configura variables de entorno (opcional pero recomendado para `SECRET_KEY`).**
-    Crea un archivo `.env` o `.flaskenv` en `backend/`:
+    Crea un archivo `.env` o `.flaskenv` en `backend/` (donde está `app.py`):
     ```
     FLASK_APP=app.py
     FLASK_DEBUG=True
-    SECRET_KEY='tu_super_clave_secreta_aqui'
+    SECRET_KEY='tu_clave_secreta_muy_fuerte_aqui'
     ```
+
 g.  **Inicializa/Actualiza la base de datos.**
-    *   **Si es la primera vez o si ha habido cambios en los modelos (como añadir el campo `summary`):**
-        1.  Si existe un archivo de base de datos (ej. `clases_sin_barreras.db` en `backend/`), **elimínalo**.
-        2.  Ejecuta el comando de inicialización:
-            ```bash
-            flask init-db
-            # O el nombre del comando definido en app.py
-            ```
-    *   *En un entorno de producción, se utilizaría un sistema de migraciones de base de datos como Alembic para aplicar cambios de esquema sin perder datos.*
+    Desde el directorio `backend/` (con el entorno virtual activado):
+    *   **Si es la primera vez o si ha habido cambios en los modelos:**
+        1.  Si existe `clases_sin_barreras.db`, elimínalo.
+        2.  Ejecuta: `flask init-db`
+    *   *Para producción, usar migraciones (ej. Alembic).*
 
 h.  **Inicia el servidor Flask.**
+    Desde el directorio `backend/`:
     ```bash
     flask run
-    # o: python app.py
+    # o también:
+    # python app.py
     ```
-    (Por defecto en `http://127.0.0.1:5000/`)
+    La aplicación estará disponible en `http://127.0.0.1:5000/` (o el puerto que se muestre). Todas las páginas (inicio, login, historial) y la API se sirven desde este único servidor.
 
-### 2. Ejecución del Frontend
+i.  **Permite el acceso al micrófono** en tu navegador cuando accedas a la página de transcripción.
 
-a.  Sirve la carpeta `frontend/` usando un servidor HTTP simple. Desde la raíz del proyecto:
-    ```bash
-    cd frontend
-    python -m http.server 8080
-    ```
-    Accede a `http://localhost:8080/` en tu navegador.
+### Nota sobre CORS
+La configuración de CORS ya **no es necesaria** con este enfoque de servidor unificado, ya que todos los recursos se sirven desde el mismo origen.
 
-b.  **Permite el acceso al micrófono** en `index.html`.
+## Contribuir
+... (igual que antes)
 
-### Notas sobre CORS
-
-Si sirves el frontend y el backend en puertos diferentes, asegúrate de que CORS esté configurado en `backend/app.py` (ver sección en Fase 2 del README o el código actual).
+## Licencia
+... (igual que antes)

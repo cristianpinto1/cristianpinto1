@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClasesSinBarreras - Transcripción</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="nav_style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='nav_style.css') }}">
 </head>
 <body>
     <header>
-        <h1><a href="index.html" class="header-link">ClasesSinBarreras</a></h1>
+        <h1><a href="{{ url_for('main.index_page') }}" class="header-link">ClasesSinBarreras</a></h1>
         <nav id="mainNav">
             <!-- La navegación se poblará con JS desde auth_utils.js -->
+            <!-- Los enlaces dentro de auth_utils.js también necesitarán usar url_for si es posible,
+                 o mantenerse como rutas relativas que funcionarán si Flask las sirve.
+                 Por ahora, asumimos que auth_utils.js usa rutas relativas como '/login' que mapearán
+                 a las nuevas rutas Flask. Si no, auth_utils.js también necesitaría ajustes.
+                 De momento, nos enfocamos en los href de este HTML. -->
         </nav>
     </header>
     <main class="transcription-page">
@@ -47,7 +52,7 @@
     <footer>
         <p>&copy; 2023 ClasesSinBarreras</p>
     </footer>
-    <script src="auth_utils.js"></script>
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='auth_utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

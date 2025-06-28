@@ -1,6 +1,6 @@
 // Funciones de utilidad para la autenticación y UI compartida
 
-const API_AUTH_BASE_URL = '/auth';
+const API_AUTH_BASE_URL = '/auth'; // Rutas de API comienzan con /auth
 
 function isLoggedIn() {
     return localStorage.getItem('isLoggedIn') === 'true';
@@ -14,12 +14,14 @@ function getCurrentUser() {
 async function logout() {
     try {
         const response = await fetch(`${API_AUTH_BASE_URL}/logout`, { method: 'POST' });
+        // Asumimos que Flask-Login y el backend manejan la cookie de sesión correctamente.
+        // No es necesario enviar headers de autorización especiales si se usan cookies HttpOnly.
         const data = await response.json();
         if (response.ok) {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('currentUser');
-            // alert('Cierre de sesión exitoso.'); // O un mensaje más sutil
-            window.location.href = 'login.html'; // Redirigir a login
+            // alert('Cierre de sesión exitoso.'); // Comentado para UX más fluida
+            window.location.href = '/login'; // CAMBIADO: Usar la ruta Flask
         } else {
             alert(data.message || 'Error al cerrar sesión.');
         }
@@ -33,11 +35,17 @@ function updateNavigation() {
     const nav = document.getElementById('mainNav');
     if (!nav) return;
 
+    // Estas rutas deben coincidir con las definidas en main_routes.py
+    const transcripcionUrl = '/';       // Ruta para index_page
+    const historialUrl = '/historial'; // Ruta para historial_page
+    const loginUrl = '/login';         // Ruta para login_page
+    const registroUrl = '/register';   // Ruta para register_page
+
     if (isLoggedIn()) {
         const user = getCurrentUser();
         nav.innerHTML = `
-            <a href="index.html">Transcripción</a>
-            <a href="historial.html">Historial</a>
+            <a href="${transcripcionUrl}">Transcripción</a>
+            <a href="${historialUrl}">Historial</a>
             <span style="color: #e0e0e0; margin-left:15px;">Hola, ${user ? user.username : 'Usuario'}!</span>
             <button id="logoutButton" class="nav-button">Cerrar Sesión</button>
         `;
@@ -47,14 +55,13 @@ function updateNavigation() {
         }
     } else {
         nav.innerHTML = `
-            <a href="index.html">Transcripción</a>
-            <a href="login.html">Iniciar Sesión</a>
-            <a href="register.html">Registrarse</a>
+            <a href="${transcripcionUrl}">Transcripción</a>
+            <a href="${loginUrl}">Iniciar Sesión</a>
+            <a href="${registroUrl}">Registrarse</a>
         `;
     }
 }
 
-// Ejecutar al cargar el script para todas las páginas que lo incluyan
 document.addEventListener('DOMContentLoaded', () => {
     updateNavigation();
 });

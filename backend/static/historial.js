@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    if (!isLoggedIn()) {
+    if (!isLoggedIn()) { // isLoggedIn() y logout() vienen de auth_utils.js
         alert("Debes iniciar sesión para ver tu historial.");
-        window.location.href = 'login.html';
+        window.location.href = '/login'; // CAMBIADO: Usar la ruta Flask
         return;
     }
 
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function displayTranscriptions(transcriptions) {
-        transcriptions.forEach((t, index) => { // Añadido index para IDs únicos de resumen
+        transcriptions.forEach((t, index) => {
             const item = document.createElement('div');
             item.className = 'transcription-item';
             item.setAttribute('data-id', t.id);
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             let summaryHTML = '';
             if (t.summary && t.summary.trim() !== '') {
-                const summaryId = `summary-${t.id}-${index}`; // ID único para el div del resumen
+                const summaryId = `summary-${t.id}-${index}`;
                 summaryHTML = `
                     <div class="item-summary-container">
                         <button class="toggle-summary-button" data-summary-target="#${summaryId}">Mostrar Resumen</button>
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <p>${t.text_content.replace(/\n/g, '<br>')}</p>
                 </div>
                 ${summaryHTML}
-            `; // Se añade el HTML del resumen aquí
+            `;
             transcriptionListContainer.appendChild(item);
         });
 
@@ -129,7 +129,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (response.ok) {
                 const itemToRemove = document.querySelector(`.transcription-item[data-id="${transcriptionId}"]`);
                 if (itemToRemove) itemToRemove.remove();
-                // alert("Transcripción eliminada exitosamente."); // Quitar alerta para UX más fluida
                 if (transcriptionListContainer.children.length === 0) {
                     noResultsMessage.style.display = 'block';
                 }
