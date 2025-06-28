@@ -154,3 +154,41 @@
     font-size: 1.1em;
     padding: 30px 0;
 }
+
+/* Estilos para la sección de resumen en el historial */
+.item-summary-container {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0; /* Separador ligero */
+}
+
+.toggle-summary-button {
+    background-color: #e9ecef; /* Gris claro */
+    color: #333;
+    border: 1px solid #ced4da;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    margin-bottom: 8px;
+}
+.toggle-summary-button:hover {
+    background-color: #dee2e6;
+}
+
+.item-summary {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+.item-summary h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1em;
+    color: #333;
+}
+.item-summary p {
+    margin-bottom: 0;
+    white-space: pre-wrap; /* Para mantener saltos de línea del resumen */
+}

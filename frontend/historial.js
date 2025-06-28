@@ -1,10 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // auth_utils.js ya se encarga de la navegación y estado de login global.
-    // Aquí nos enfocamos en la lógica de la página de historial.
-
     if (!isLoggedIn()) {
-        // Si auth_utils.js no redirige, lo hacemos aquí como fallback.
-        // O mejor, auth_utils.js podría tener una función ensureLoggedIn().
         alert("Debes iniciar sesión para ver tu historial.");
         window.location.href = 'login.html';
         return;
@@ -21,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const API_TRANSCRIPTIONS_URL = '/api/transcriptions';
 
     async function fetchAndDisplayTranscriptions(date = '', course = '') {
-        transcriptionListContainer.innerHTML = ''; // Limpiar lista anterior
+        transcriptionListContainer.innerHTML = '';
         loadingMessage.style.display = 'block';
         noResultsMessage.style.display = 'none';
 
@@ -32,11 +27,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const url = `${API_TRANSCRIPTIONS_URL}?${queryParams.toString()}`;
 
         try {
-            const response = await fetch(url); // GET por defecto
+            const response = await fetch(url);
             if (!response.ok) {
-                if (response.status === 401) { // No autorizado
+                if (response.status === 401) {
                     alert("Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");
-                    logout(); // Usar la función de auth_utils.js
+                    logout();
                     return;
                 }
                 throw new Error(`Error del servidor: ${response.status}`);
@@ -59,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function displayTranscriptions(transcriptions) {
-        transcriptions.forEach(t => {
+        transcriptions.forEach((t, index) => { // Añadido index para IDs únicos de resumen
             const item = document.createElement('div');
             item.className = 'transcription-item';
             item.setAttribute('data-id', t.id);
@@ -68,6 +63,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 year: 'numeric', month: 'long', day: 'numeric',
                 hour: '2-digit', minute: '2-digit'
             });
+
+            let summaryHTML = '';
+            if (t.summary && t.summary.trim() !== '') {
+                const summaryId = `summary-${t.id}-${index}`; // ID único para el div del resumen
+                summaryHTML = `
+                    <div class="item-summary-container">
+                        <button class="toggle-summary-button" data-summary-target="#${summaryId}">Mostrar Resumen</button>
+                        <div class="item-summary" id="${summaryId}" style="display:none;">
+                            <h4>Resumen:</h4>
+                            <p>${t.summary.replace(/\n/g, '<br>')}</p>
+                        </div>
+                    </div>
+                `;
+            }
 
             item.innerHTML = `
                 <button class="delete-button" title="Eliminar transcripción" data-id="${t.id}">×</button>
@@ -78,13 +87,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="item-content">
                     <p>${t.text_content.replace(/\n/g, '<br>')}</p>
                 </div>
-            `;
+                ${summaryHTML}
+            `; // Se añade el HTML del resumen aquí
             transcriptionListContainer.appendChild(item);
         });
 
-        // Añadir event listeners a los botones de eliminar
         document.querySelectorAll('.delete-button').forEach(button => {
             button.addEventListener('click', handleDeleteTranscription);
+        });
+
+        document.querySelectorAll('.toggle-summary-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const targetId = e.target.dataset.summaryTarget;
+                const summaryDiv = document.querySelector(targetId);
+                if (summaryDiv) {
+                    if (summaryDiv.style.display === 'none') {
+                        summaryDiv.style.display = 'block';
+                        e.target.textContent = 'Ocultar Resumen';
+                    } else {
+                        summaryDiv.style.display = 'none';
+                        e.target.textContent = 'Mostrar Resumen';
+                    }
+                }
+            });
         });
     }
 
@@ -97,21 +122,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            // Necesitamos un endpoint DELETE en el backend: /api/transcriptions/<id>
             const response = await fetch(`${API_TRANSCRIPTIONS_URL}/${transcriptionId}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
-                // Eliminar el elemento del DOM
                 const itemToRemove = document.querySelector(`.transcription-item[data-id="${transcriptionId}"]`);
                 if (itemToRemove) itemToRemove.remove();
-                alert("Transcripción eliminada exitosamente.");
-                // Si la lista queda vacía, mostrar mensaje
+                // alert("Transcripción eliminada exitosamente."); // Quitar alerta para UX más fluida
                 if (transcriptionListContainer.children.length === 0) {
                     noResultsMessage.style.display = 'block';
                 }
-
             } else {
                  if (response.status === 401) {
                     alert("Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");
@@ -127,7 +148,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-
     applyFilterButton.addEventListener('click', () => {
         fetchAndDisplayTranscriptions(dateFilterInput.value, courseFilterInput.value.trim());
     });
@@ -138,10 +158,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         fetchAndDisplayTranscriptions();
     });
 
-    // Carga inicial
     fetchAndDisplayTranscriptions();
-
-    // NOTA: La funcionalidad de eliminar transcripción (handleDeleteTranscription)
-    // requiere un nuevo endpoint en el backend: DELETE /api/transcriptions/<id>
-    // Esto se abordará en un paso posterior si se decide implementar.
 });

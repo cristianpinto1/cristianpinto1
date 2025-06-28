@@ -1,7 +1,21 @@
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
-from .models import db, Transcription # Asegurarse que User no es necesario aquí a menos que se use directamente
+from .models import db, Transcription
 import datetime
+
+# Importaciones para Sumy
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.nlp.stemmers import Stemmer
+from sumy.utils import get_stop_words
+# Elegir un sumarizador, por ejemplo, LsaSummarizer o TextRankSummarizer
+from sumy.summarizers.lsa import LsaSummarizer as Summarizer
+# from sumy.summarizers.text_rank import TextRankSummarizer as Summarizer
+# from sumy.summarizers.luhn import LuhnSummarizer as Summarizer
+
+
+LANGUAGE = "spanish"
+SENTENCES_COUNT = 3 # Número de frases para el resumen
 
 transcriptions_bp = Blueprint('transcriptions', __name__)
 
@@ -19,9 +33,34 @@ def save_transcription():
         user_id=current_user.id,
         text_content=text_content,
         course_label=course_label
+        # El campo 'summary' se llenará después
     )
     db.session.add(new_transcription)
-    db.session.commit()
+    db.session.commit() # Guardar primero para obtener el ID y la transcripción base
+
+    # Generar y guardar el resumen
+    summary_text = None # Inicializar summary_text
+    try:
+        parser = PlaintextParser.from_string(new_transcription.text_content, Tokenizer(LANGUAGE))
+        stemmer = Stemmer(LANGUAGE)
+        summarizer = Summarizer(stemmer) # Usar el Summarizer importado
+        summarizer.stop_words = get_stop_words(LANGUAGE)
+
+        summary_sentences = []
+        for sentence in summarizer(parser.document, SENTENCES_COUNT):
+            summary_sentences.append(str(sentence))
+        summary_text = " ".join(summary_sentences)
+
+        new_transcription.summary = summary_text
+        db.session.add(new_transcription) # Añadir de nuevo para actualizar el campo summary
+        db.session.commit()
+    except Exception as e:
+        # Si falla la generación del resumen, no queremos que falle toda la operación.
+        # Simplemente lo registramos y continuamos. El campo 'summary' quedará null.
+        print(f"Error al generar resumen para transcripción ID {new_transcription.id}: {e}")
+        # Podríamos querer hacer db.session.rollback() aquí si la sesión está sucia,
+        # pero como el error es después del primer commit, solo afectaría al summary.
+        # No es crítico si el summary queda null.
 
     return jsonify({
         'message': 'Transcripción guardada exitosamente',
@@ -29,7 +68,8 @@ def save_transcription():
             'id': new_transcription.id,
             'text_content': new_transcription.text_content,
             'timestamp': new_transcription.timestamp.isoformat(),
-            'course_label': new_transcription.course_label
+            'course_label': new_transcription.course_label,
+            'summary': new_transcription.summary # Devolver el resumen
         }
     }), 201
 
@@ -61,21 +101,20 @@ def get_transcriptions():
             'id': t.id,
             'text_content': t.text_content,
             'timestamp': t.timestamp.isoformat(),
-            'course_label': t.course_label
+            'course_label': t.course_label,
+            'summary': t.summary # Devolver también el resumen aquí
         })
     return jsonify(output), 200
 
 @transcriptions_bp.route('/transcriptions/<int:transcription_id>', methods=['DELETE'])
 @login_required
 def delete_transcription(transcription_id):
-    # Buscar la transcripción por ID. get_or_404 es útil porque devuelve 404 si no se encuentra.
-    transcription = db.session.get(Transcription, transcription_id) # Usar db.session.get para SQLAlchemy 2.0+
+    transcription = db.session.get(Transcription, transcription_id)
     if not transcription:
          return jsonify({'message': 'Transcripción no encontrada'}), 404
 
-    # Verificar que la transcripción pertenece al usuario actual
     if transcription.user_id != current_user.id:
-        return jsonify({'message': 'No autorizado para eliminar esta transcripción'}), 403 # Forbidden
+        return jsonify({'message': 'No autorizado para eliminar esta transcripción'}), 403
 
     db.session.delete(transcription)
     db.session.commit()

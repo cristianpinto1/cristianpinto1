@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Transcripciones - ClasesSinBarreras</title>
-    <link rel="stylesheet" href="style.css"> <!-- Estilos generales -->
-    <link rel="stylesheet" href="nav_style.css"> <!-- Estilos de navegación (si se separan) -->
-    <link rel="stylesheet" href="historial_style.css"> <!-- Estilos específicos para esta página -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="nav_style.css">
+    <link rel="stylesheet" href="historial_style.css">
 </head>
 <body>
     <header>
         <h1><a href="index.html" class="header-link">ClasesSinBarreras</a></h1>
-        <nav id="mainNav">
-            <!-- La navegación se poblará con JS desde auth_utils.js -->
-        </nav>
+        <nav id="mainNav"></nav>
     </header>
 
     <main class="history-page">
@@ -34,9 +32,9 @@
 
         <div id="transcriptionListContainer">
             <p id="loadingMessage">Cargando historial...</p>
-            <!-- Las transcripciones se cargarán aquí dinámicamente -->
-            <!-- Ejemplo de cómo se podría ver una transcripción:
-            <div class="transcription-item">
+            <!-- Ejemplo de estructura de un item con resumen:
+            <div class="transcription-item" data-id="1">
+                <button class="delete-button" title="Eliminar transcripción" data-id="1">×</button>
                 <div class="item-header">
                     <span class="item-date">2023-10-27 10:30</span>
                     <span class="item-course">Cálculo I</span>
@@ -44,21 +42,26 @@
                 <div class="item-content">
                     <p>Este es el contenido de la transcripción...</p>
                 </div>
-                <button class="delete-button" data-id="1">Eliminar</button>
+                <div class="item-summary-container">
+                    <button class="toggle-summary-button" data-summary-target="summary-1">Mostrar Resumen</button>
+                    <div class="item-summary" id="summary-1" style="display:none;">
+                        <h4>Resumen:</h4>
+                        <p>Este sería el resumen generado...</p>
+                    </div>
+                </div>
             </div>
             -->
         </div>
         <div id="noResultsMessage" class="empty-state-message" style="display:none;">
             <p>No se encontraron transcripciones con los filtros seleccionados, o aún no tienes transcripciones guardadas.</p>
         </div>
-
     </main>
 
     <footer>
         <p>&copy; 2023 ClasesSinBarreras</p>
     </footer>
 
-    <script src="auth_utils.js"></script> <!-- Para la navegación y estado de login -->
-    <script src="historial.js"></script> <!-- Script específico para esta página -->
+    <script src="auth_utils.js"></script>
+    <script src="historial.js"></script>
 </body>
 </html>
