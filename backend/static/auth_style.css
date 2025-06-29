@@ -1,25 +1,20 @@
 /* Estilos específicos para las páginas de autenticación */
-.auth-page {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Alinea arriba para que el header no interfiera */
-    padding-top: 40px; /* Espacio desde el header */
-    width: 100%;
-}
+/* main.auth-page ya está estilizado en style.css (fondo, padding, sombra, etc.) */
 
 .auth-container {
-    background-color: #fff;
-    padding: 30px 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px; /* Ancho del formulario */
+    /* background-color: var(--color-surface); Ya heredado de main.auth-page */
+    padding: 30px 40px; /* Mantener padding generoso */
+    border-radius: var(--border-radius-md); /* Usar variable global */
+    /* box-shadow: var(--shadow-md); /* Sombra más pronunciada para el contenedor de auth */
+    /* La sombra ya está en main.auth-page, no duplicar a menos que se quiera una anidada */
+    width: 100%; /* Ocupará el max-width de main.auth-page */
     text-align: center;
 }
 
 .auth-container h2 {
-    color: #333;
-    margin-bottom: 25px;
+    color: var(--color-text-primary);
+    margin-bottom: 30px; /* Más espacio debajo del título */
+    font-weight: 700; /* Asegurar que use el peso de encabezado */
 }
 
 .form-group {
@@ -30,130 +25,114 @@
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: #555;
-    font-weight: bold;
+    color: var(--color-text-secondary); /* Texto secundario para labels */
+    font-weight: 700; /* Labels en negrita */
+    font-size: 0.9em;
 }
 
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"] {
-    width: calc(100% - 20px); /* Ajuste para padding interno */
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
+    font-family: var(--font-primary);
+    width: 100%; /* Ocupar todo el ancho del .form-group */
+    padding: 12px 15px; /* Padding interno más cómodo */
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    font-size: 1em; /* Tamaño de fuente estándar */
+    color: var(--color-text-primary);
+    background-color: var(--color-surface); /* Fondo del input */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.auth-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+    outline: none;
+    border-color: var(--color-input-focus-border);
+    box-shadow: 0 0 0 0.2rem var(--color-input-focus-shadow);
+}
+
+.auth-button { /* Hereda de .button y .button-primary de style.css si se aplican ambas clases */
+    /* Si solo se usa .auth-button, definir aquí: */
+    display: inline-block; /* Para que el width funcione correctamente */
     width: 100%;
-    transition: background-color 0.3s ease;
+    padding: 12px 20px;
+    font-size: 1.1em; /* Botón más prominente */
+    font-weight: 700; /* Texto del botón en negrita */
+    text-align: center;
+    background-color: var(--color-primary);
+    color: white;
+    border: 1px solid var(--color-primary);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
     margin-top: 10px;
 }
 
 .auth-button:hover {
-    background-color: #0056b3;
+    background-color: var(--color-primary-darker);
+    border-color: var(--color-primary-darker);
+    color: white; /* Asegurar que no cambie si es un <a> */
+    text-decoration: none; /* Quitar si es un <a> */
 }
 
 .auth-message {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 5px;
+    margin-top: 20px; /* Más espacio */
+    padding: 12px 15px; /* Más padding */
+    border-radius: var(--border-radius-md);
     font-size: 0.95em;
+    border: 1px solid transparent; /* Borde base */
 }
 
 .auth-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: var(--color-success-lighter);
+    color: var(--color-success); /* Texto más oscuro para contraste */
+    border-color: var(--color-success);
 }
 
 .auth-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background-color: var(--color-error-lighter);
+    color: var(--color-error-text);
+    border-color: var(--color-danger);
 }
 
 .auth-switch {
-    margin-top: 20px;
+    margin-top: 25px; /* Más espacio */
     font-size: 0.9em;
+    color: var(--color-text-secondary);
 }
 
 .auth-switch a {
-    color: #007bff;
+    color: var(--color-primary);
+    font-weight: 700; /* Enlace más prominente */
     text-decoration: none;
 }
-
 .auth-switch a:hover {
     text-decoration: underline;
+    color: var(--color-primary-darker);
 }
 
-/* Estilo para el enlace del título en el header */
-.header-link {
-    color: inherit; /* Hereda el color del header (blanco) */
-    text-decoration: none;
-}
-.header-link:hover {
-    text-decoration: underline;
-}
-
-/* Pequeños ajustes al header para las páginas de auth */
-header nav {
-    float: right;
-    margin-right: 20px;
-}
-header nav a {
-    color: white;
-    text-decoration: none;
-    margin-left: 15px;
-    font-size: 0.9em;
-}
-header nav a:hover {
-    text-decoration: underline;
-}
-
-/* === Media Queries para Páginas de Autenticación === */
-
+/* Media Queries para Páginas de Autenticación (ya existentes, revisar si usan variables) */
 @media (max-width: 600px) {
-    .auth-page {
-        padding-top: 20px; /* Reducir padding superior en móviles */
-        padding-left: 10px; /* Añadir un poco de padding lateral si main no lo tiene */
-        padding-right: 10px;
-    }
-
+    /* main.auth-page padding ya se ajusta en style.css global media query */
+    /* .auth-container width: 90% ya estaba, padding se puede ajustar si es necesario */
     .auth-container {
-        width: 90%; /* Hacer el contenedor más fluido */
-        padding: 20px; /* Reducir padding interno */
-        margin-left: auto;  /* Asegurar centrado si es width % */
-        margin-right: auto; /* Asegurar centrado si es width % */
+        padding: 25px 20px; /* Ajustar padding para móviles */
     }
 
     .auth-container h2 {
-        font-size: 1.5em; /* Reducir tamaño del título */
-        margin-bottom: 20px;
+        font-size: 1.4em; /* Un poco más pequeño en móviles */
     }
 
     .form-group input[type="text"],
     .form-group input[type="email"],
     .form-group input[type="password"] {
-        /* El width: calc(100% - 20px) debería funcionar bien,
-           asegurando que el padding interno no cause desbordamiento.
-           Podemos aumentar ligeramente el tamaño de fuente para mejor legibilidad en móviles. */
-        font-size: 1em; /* O 16px para evitar zoom en iOS */
+        padding: 10px 12px; /* Ligeramente menos padding en móviles */
+        font-size: 1rem; /* Evitar zoom en iOS */
     }
 
     .auth-button {
-        padding: 12px 15px; /* Mantener buen tamaño para tap */
+        padding: 10px 15px;
         font-size: 1em;
-    }
-
-    .auth-switch {
-        font-size: 0.85em; /* Ligeramente más pequeño si es necesario */
     }
 }

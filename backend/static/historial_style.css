@@ -1,78 +1,64 @@
 /* Estilos para la página de historial de transcripciones */
-.history-page {
-    width: 90%;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-}
+/* main.history-page ya está estilizado en style.css (fondo, padding, sombra, etc.) */
 
-.history-page h2 {
+.history-page h2 { /* Estilo para el título de la página de historial */
     text-align: center;
-    color: #333;
+    color: var(--color-text-primary);
     margin-bottom: 30px;
+    font-weight: 700; /* Asegurar peso de encabezado */
 }
 
 .filter-controls {
     display: flex;
-    flex-wrap: wrap; /* Para que se ajusten en pantallas pequeñas */
-    gap: 15px; /* Espacio entre controles */
-    align-items: flex-end; /* Alinear items al final para que botones y labels se vean bien */
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
+    background-color: var(--color-surface); /* Usar color de superficie para el contenedor de filtros */
+    border-radius: var(--border-radius-md);
     margin-bottom: 30px;
-    border: 1px solid #eee;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm); /* Añadir una sombra sutil */
 }
 
 .filter-controls .form-group {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Para que ocupen espacio disponible */
-    min-width: 200px; /* Ancho mínimo antes de envolver */
+    flex-grow: 1;
+    min-width: 200px;
 }
 
 .filter-controls label {
+    font-family: var(--font-primary);
     font-size: 0.9em;
-    color: #555;
+    color: var(--color-text-secondary);
     margin-bottom: 5px;
+    font-weight: 700; /* Labels en negrita */
 }
 
 .filter-controls input[type="date"],
 .filter-controls input[type="text"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    font-family: var(--font-primary);
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
     font-size: 1em;
+    color: var(--color-text-primary);
+    background-color: var(--color-surface); /* O un gris muy claro si se prefiere contraste */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.filter-controls input[type="date"]:focus,
+.filter-controls input[type="text"]:focus {
+    outline: none;
+    border-color: var(--color-input-focus-border);
+    box-shadow: 0 0 0 0.2rem var(--color-input-focus-shadow);
 }
 
-.filter-controls .button-primary,
-.filter-controls .button-secondary {
-    padding: 10px 15px;
-    font-size: 1em;
-    border-radius: 4px;
-    cursor: pointer;
-    border: none;
-    height: fit-content; /* Ajustar altura al contenido */
-}
 
-.button-primary {
-    background-color: #007bff;
-    color: white;
-}
-.button-primary:hover {
-    background-color: #0056b3;
-}
-
-.button-secondary {
-    background-color: #6c757d;
-    color: white;
-}
-.button-secondary:hover {
-    background-color: #545b62;
-}
+/* Los botones .button-primary y .button-secondary ya están definidos globalmente en style.css */
+/* Solo necesitamos asegurar que las clases se usen en el HTML si es necesario,
+   o podemos definir estilos específicos si se desvían de los globales. */
+/* .filter-controls .button-primary, .filter-controls .button-secondary {} */
 
 
 #transcriptionListContainer {
@@ -80,211 +66,112 @@
 }
 
 .transcription-item {
-    background-color: #fdfdfd;
-    border: 1px solid #eee;
-    border-radius: 6px;
-    padding: 15px 20px;
+    background-color: var(--color-surface); /* Estilo tarjeta */
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: 20px 25px; /* Más padding */
     margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    position: relative; /* Para el botón de eliminar */
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transition: box-shadow 0.2s ease-in-out;
 }
+.transcription-item:hover {
+    box-shadow: var(--shadow-md); /* Sombra más pronunciada en hover */
+}
+
 
 .transcription-item .item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px; /* Más espacio */
     padding-bottom: 10px;
-    border-bottom: 1px dashed #eee;
+    border-bottom: 1px solid var(--color-border); /* Borde más sutil */
 }
 
 .item-header .item-date {
     font-size: 0.9em;
-    color: #555;
-    font-weight: bold;
+    color: var(--color-text-primary); /* Texto primario para la fecha */
+    font-weight: 700;
 }
 
 .item-header .item-course {
-    font-size: 0.9em;
-    color: #007bff;
-    background-color: #e7f3ff;
-    padding: 3px 8px;
-    border-radius: 4px;
+    font-family: var(--font-primary);
+    font-size: 0.85em; /* Ligeramente más pequeño */
+    color: var(--color-primary); /* Usar color primario para la etiqueta */
+    background-color: var(--color-primary-lighter); /* Fondo de acento claro */
+    padding: 4px 10px; /* Ajustar padding */
+    border-radius: var(--border-radius-sm);
+    font-weight: 700; /* Texto de etiqueta en negrita */
 }
 .item-header .item-course:empty {
-    display: none; /* Ocultar si no hay etiqueta de curso */
+    display: none;
 }
 
-
 .transcription-item .item-content p {
+    font-family: var(--font-primary);
     font-size: 1em;
-    line-height: 1.6;
-    color: #333;
-    white-space: pre-wrap; /* Conservar saltos de línea y espacios */
-    margin-bottom: 0; /* Quitar margen si es el único párrafo */
+    line-height: 1.7; /* Un poco más de altura de línea para bloques de texto */
+    color: var(--color-text-primary);
+    white-space: pre-wrap;
+    margin-bottom: 0;
 }
 
 .delete-button {
+    /* Hereda de button, pero podemos especializarlo */
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #ff4d4d; /* Rojo para eliminar */
+    top: 15px; /* Ajustar posición */
+    right: 15px;
+    background-color: var(--color-danger);
     color: white;
-    border: none;
-    border-radius: 50%; /* Circular */
-    width: 30px;
-    height: 30px;
-    font-size: 16px; /* Tamaño de la 'X' o icono */
-    cursor: pointer;
+    border: 1px solid var(--color-danger);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    font-weight: 700; /* Para que la 'X' sea más visible */
+    line-height: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    line-height: 1; /* Para centrar el texto (ej. 'X') */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    padding: 0; /* Resetear padding si es necesario para centrar el icono/texto */
+    box-shadow: var(--shadow-sm);
 }
 .delete-button:hover {
-    background-color: #cc0000; /* Rojo más oscuro */
+    background-color: var(--color-danger-darker);
+    border-color: var(--color-danger-darker);
+    color: white; /* Asegurar color */
 }
 
 
 #loadingMessage,
 .empty-state-message {
     text-align: center;
-    color: #777;
+    color: var(--color-text-secondary);
     font-size: 1.1em;
-    padding: 30px 0;
+    padding: 40px 0; /* Más padding */
 }
 
-/* Estilos para la sección de resumen en el historial */
-.item-summary-container {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid #f0f0f0; /* Separador ligero */
-}
-
-.toggle-summary-button {
-    background-color: #e9ecef; /* Gris claro */
-    color: #333;
-    border: 1px solid #ced4da;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85em;
-    margin-bottom: 8px;
-}
-.toggle-summary-button:hover {
-    background-color: #dee2e6;
-}
-
-.item-summary {
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    font-size: 0.95em;
-}
-.item-summary h4 {
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-size: 1em;
-    color: #333;
-}
-.item-summary p {
-    margin-bottom: 0;
-    white-space: pre-wrap; /* Para mantener saltos de línea del resumen */
-}
-
-/* === Media Queries para Página de Historial === */
-
-/* Para tablets (ej. hasta 900px) - Ajustes menores si son necesarios */
+/* Media Queries para Página de Historial (revisar para usar variables) */
 @media (max-width: 900px) {
     .history-page {
-        width: 95%; /* Un poco más de ancho */
-        padding: 15px;
-    }
-
-    .filter-controls {
-        /* Podrían empezar a apilarse o simplemente fluir */
-        /* Por ahora, dejaremos que flex-wrap haga su trabajo.
-           Si se quiere un control más estricto, se puede forzar flex-direction: column antes. */
+        /* width: 95%; padding: 15px; Ya se maneja por .main-container y main.history-page */
     }
 }
-
-
-/* Para móviles (ej. hasta 600px) */
 @media (max-width: 600px) {
-    .history-page {
-        /* width: 100% y padding:15px ya vienen de .main global en style.css */
-        /* No es necesario redefinir aquí a menos que se quiera algo específico */
-    }
-
     .filter-controls {
-        flex-direction: column; /* Apilar todos los controles de filtro */
-        align-items: stretch; /* Estirar elementos para que ocupen el ancho */
+        padding: 15px; /* Menos padding en móviles */
     }
+    /* Los demás estilos responsivos para filter-controls y transcription-item
+       ya están definidos y deberían funcionar bien con las variables.
+       Se pueden hacer ajustes finos si es necesario. */
 
-    .filter-controls .form-group {
-        min-width: 0; /* Resetear min-width para que no interfiera con el apilado */
-        width: 100%;   /* Ocupar todo el ancho */
-        box-sizing: border-box;
-    }
-
-    .filter-controls input[type="date"],
-    .filter-controls input[type="text"],
-    .filter-controls .button-primary,
-    .filter-controls .button-secondary {
-        width: 100%; /* Hacer que todos los inputs y botones ocupen el ancho */
-        box-sizing: border-box; /* Incluir padding/border en el width */
-        margin-bottom: 10px; /* Espacio entre elementos apilados */
-    }
-    .filter-controls .button-primary:last-child,
-    .filter-controls .button-secondary:last-child {
-        margin-bottom: 0; /* Quitar margen del último botón */
-    }
-
-
-    .transcription-item {
-        padding: 10px 15px; /* Reducir padding */
-    }
-
-    .transcription-item .item-header {
-        flex-direction: column; /* Apilar fecha y curso */
-        align-items: flex-start; /* Alinear a la izquierda */
-        gap: 5px; /* Espacio entre fecha y curso */
-    }
-
-    .item-header .item-date,
-    .item-header .item-course {
-        font-size: 0.85em; /* Un poco más pequeño */
-    }
-    .item-header .item-course {
-        padding: 2px 6px; /* Ajustar padding de la etiqueta de curso */
-    }
-
-    .transcription-item .item-content p {
-        font-size: 0.9em; /* Ligeramente más pequeño para el contenido */
-    }
+    .transcription-item { padding: 15px; }
+    .item-header .item-date, .item-header .item-course { font-size: 0.8em; }
+    .transcription-item .item-content p { font-size: 0.95em; line-height: 1.6; }
 
     .delete-button {
-        /* Podría necesitar ser un poco más grande o tener más padding para ser fácilmente presionable */
-        width: 32px;
-        height: 32px;
-        font-size: 18px;
-        /* La posición absoluta podría necesitar ajustes si el padding del item cambia mucho,
-           pero top:10px, right:10px suele ser robusto. */
-    }
-
-    .item-summary-container {
-        margin-top: 10px;
-        padding-top: 8px;
-    }
-    .toggle-summary-button {
-        padding: 6px 12px; /* Ligeramente más grande para tap */
-        font-size: 0.9em;
-    }
-    .item-summary {
-        font-size: 0.9em;
-    }
-    .item-summary h4 {
-        font-size: 0.95em;
+        width: 28px; height: 28px; font-size: 14px;
+        top: 10px; right: 10px;
     }
 }

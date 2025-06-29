@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    if (!isLoggedIn()) { // isLoggedIn() y logout() vienen de auth_utils.js
+    if (!isLoggedIn()) {
         alert("Debes iniciar sesión para ver tu historial.");
-        window.location.href = '/login'; // CAMBIADO: Usar la ruta Flask
+        window.location.href = '/login';
         return;
     }
 
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw new Error(`Error del servidor: ${response.status}`);
             }
 
-            const transcriptions = await response.json();
+            const transcriptions = await response.json(); // API ya no devuelve 'summary'
             loadingMessage.style.display = 'none';
 
             if (transcriptions.length === 0) {
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function displayTranscriptions(transcriptions) {
-        transcriptions.forEach((t, index) => {
+        transcriptions.forEach((t) => { // 'index' ya no es necesario para IDs de resumen
             const item = document.createElement('div');
             item.className = 'transcription-item';
             item.setAttribute('data-id', t.id);
@@ -64,19 +64,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 hour: '2-digit', minute: '2-digit'
             });
 
-            let summaryHTML = '';
-            if (t.summary && t.summary.trim() !== '') {
-                const summaryId = `summary-${t.id}-${index}`;
-                summaryHTML = `
-                    <div class="item-summary-container">
-                        <button class="toggle-summary-button" data-summary-target="#${summaryId}">Mostrar Resumen</button>
-                        <div class="item-summary" id="${summaryId}" style="display:none;">
-                            <h4>Resumen:</h4>
-                            <p>${t.summary.replace(/\n/g, '<br>')}</p>
-                        </div>
-                    </div>
-                `;
-            }
+            // summaryHTML y la lógica del botón de resumen eliminados.
+            // if (t.summary && t.summary.trim() !== '') { ... }
 
             item.innerHTML = `
                 <button class="delete-button" title="Eliminar transcripción" data-id="${t.id}">×</button>
@@ -87,8 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="item-content">
                     <p>${t.text_content.replace(/\n/g, '<br>')}</p>
                 </div>
-                ${summaryHTML}
-            `;
+            `; // summaryHTML eliminado de aquí
             transcriptionListContainer.appendChild(item);
         });
 
@@ -96,48 +84,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             button.addEventListener('click', handleDeleteTranscription);
         });
 
-        document.querySelectorAll('.toggle-summary-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const targetId = e.target.dataset.summaryTarget;
-                const summaryDiv = document.querySelector(targetId);
-                if (summaryDiv) {
-                    if (summaryDiv.style.display === 'none') {
-                        summaryDiv.style.display = 'block';
-                        e.target.textContent = 'Ocultar Resumen';
-                    } else {
-                        summaryDiv.style.display = 'none';
-                        e.target.textContent = 'Mostrar Resumen';
-                    }
-                }
-            });
-        });
+        // Los event listeners para '.toggle-summary-button' eliminados.
     }
 
     async function handleDeleteTranscription(event) {
+        // ... (sin cambios en esta función)
         const transcriptionId = event.target.dataset.id;
         if (!transcriptionId) return;
-
-        if (!confirm("¿Estás seguro de que quieres eliminar esta transcripción? Esta acción no se puede deshacer.")) {
-            return;
-        }
-
+        if (!confirm("¿Estás seguro de que quieres eliminar esta transcripción? Esta acción no se puede deshacer.")) return;
         try {
-            const response = await fetch(`${API_TRANSCRIPTIONS_URL}/${transcriptionId}`, {
-                method: 'DELETE',
-            });
-
+            const response = await fetch(`${API_TRANSCRIPTIONS_URL}/${transcriptionId}`, { method: 'DELETE' });
             if (response.ok) {
                 const itemToRemove = document.querySelector(`.transcription-item[data-id="${transcriptionId}"]`);
                 if (itemToRemove) itemToRemove.remove();
-                if (transcriptionListContainer.children.length === 0) {
-                    noResultsMessage.style.display = 'block';
-                }
+                if (transcriptionListContainer.children.length === 0) noResultsMessage.style.display = 'block';
             } else {
-                 if (response.status === 401) {
-                    alert("Tu sesión ha expirado. Por favor, inicia sesión de nuevo.");
-                    logout();
-                    return;
-                }
+                 if (response.status === 401) { alert("Tu sesión ha expirado."); logout(); return; }
                 const data = await response.json();
                 alert(data.message || "Error al eliminar la transcripción.");
             }

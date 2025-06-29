@@ -11,12 +11,6 @@
     <header>
         <h1><a href="{{ url_for('main.index_page') }}" class="header-link">ClasesSinBarreras</a></h1>
         <nav id="mainNav">
-            <!-- La navegación se poblará con JS desde auth_utils.js -->
-            <!-- Los enlaces dentro de auth_utils.js también necesitarán usar url_for si es posible,
-                 o mantenerse como rutas relativas que funcionarán si Flask las sirve.
-                 Por ahora, asumimos que auth_utils.js usa rutas relativas como '/login' que mapearán
-                 a las nuevas rutas Flask. Si no, auth_utils.js también necesitaría ajustes.
-                 De momento, nos enfocamos en los href de este HTML. -->
         </nav>
     </header>
     <main class="transcription-page">
@@ -42,12 +36,7 @@
             <p><em>Haz clic en el micrófono para comenzar la transcripción...</em></p>
         </div>
 
-        <div id="currentSummaryOutputContainer" class="summary-output-container" style="display:none;">
-            <h3>Resumen de la Transcripción Actual:</h3>
-            <div id="currentSummaryOutput" class="item-summary">
-                <p><em>Generando resumen...</em></p>
-            </div>
-        </div>
+        <!-- El div#currentSummaryOutputContainer ha sido eliminado -->
     </main>
     <footer>
         <p>&copy; 2023 ClasesSinBarreras</p>

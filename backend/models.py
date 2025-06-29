@@ -33,7 +33,7 @@ class Transcription(db.Model):
     text_content = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
     course_label = db.Column(db.String(100), nullable=True)
-    summary = db.Column(db.Text, nullable=True) # <--- NUEVO CAMPO AÑADIDO AQUÍ
+    # El campo 'summary' ha sido eliminado.
 
     def __repr__(self):
         return f'<Transcription {self.id} by User {self.user_id}>'
