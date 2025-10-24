@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container">
+        <h1 class="mb-4">Resultados de la Búsqueda para: "{{ query }}"</h1>
+        {% if resultados %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo Electrónico</th>
+                        <th>Puesto</th>
+                        <th>Área</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for trabajador in resultados %}
+                        <tr>
+                            <td>{{ trabajador.nombre_completo }}</td>
+                            <td>{{ trabajador.correo_electronico }}</td>
+                            <td>{{ trabajador.puesto }}</td>
+                            <td>{{ trabajador.area.nombre }}</td>
+                            <td>
+                                <a href="{{ url_for('editar_trabajador', trabajador_id=trabajador.id) }}" class="btn btn-secondary btn-sm">Editar</a>
+                                <form action="{{ url_for('eliminar_trabajador', trabajador_id=trabajador.id) }}" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No se encontraron resultados para su búsqueda.</p>
+        {% endif %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{{ title }}</legend>
+                <div class="form-group">
+                    {{ form.nombre_completo.label(class="form-control-label") }}
+                    {{ form.nombre_completo(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.correo_electronico.label(class="form-control-label") }}
+                    {{ form.correo_electronico(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.telefono.label(class="form-control-label") }}
+                    {{ form.telefono(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.direccion_ip.label(class="form-control-label") }}
+                    {{ form.direccion_ip(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.hostname.label(class="form-control-label") }}
+                    {{ form.hostname(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.puesto.label(class="form-control-label") }}
+                    {{ form.puesto(class="form-control form-control-lg") }}
+                </div>
+                <div class="form-group">
+                    {{ form.area.label(class="form-control-label") }}
+                    {{ form.area(class="form-control form-control-lg") }}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

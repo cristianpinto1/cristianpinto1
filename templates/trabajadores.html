@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container">
+        <h1 class="mb-4">Trabajadores</h1>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <a href="{{ url_for('nuevo_trabajador') }}" class="btn btn-primary">Crear Nuevo Trabajador</a>
+                <a href="{{ url_for('exportar_trabajadores') }}" class="btn btn-secondary">Exportar a CSV</a>
+            </div>
+            <div class="col-md-6">
+                <form method="GET" action="{{ url_for('buscar_trabajadores') }}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="q" placeholder="Buscar trabajador...">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo Electrónico</th>
+                    <th>Puesto</th>
+                    <th>Área</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trabajador in trabajadores %}
+                    <tr>
+                        <td>{{ trabajador.nombre_completo }}</td>
+                        <td>{{ trabajador.correo_electronico }}</td>
+                        <td>{{ trabajador.puesto }}</td>
+                        <td>{{ trabajador.area.nombre }}</td>
+                        <td>
+                            <a href="{{ url_for('editar_trabajador', trabajador_id=trabajador.id) }}" class="btn btn-secondary btn-sm">Editar</a>
+                            <form action="{{ url_for('eliminar_trabajador', trabajador_id=trabajador.id) }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}
